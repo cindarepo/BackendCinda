@@ -102,6 +102,13 @@ class ControladorGeneral extends Controller
             $datosUsuarioPanda = $datosGenerales['panda_informacion_personal'];
             $datosUsuarioPanda["panda_informacion_personal"] = $idPandaInformacionPersonal;
             $datosUsuarioPanda["panda_cod_status_usuario"] = 1;
+
+            /**
+             *
+             * MODIFICAR AL OTRO LADO
+             *
+             */
+            $datosUsuarioPanda["panda_fecha_ingreso_usuario"] = now();
             $idUsuarioPanda = $this->pandaUsuarioController->storeLocal($datosUsuarioPanda)->cod_usuario_panda;
 
             /**
