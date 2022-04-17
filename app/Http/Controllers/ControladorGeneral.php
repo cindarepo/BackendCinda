@@ -420,6 +420,12 @@ class ControladorGeneral extends Controller
             $dataProfesional = $datosGenerales['cod_personal_cinda']['cod_informacion_personal_empleado'];
             $this->informacionPersonalEmpleadoController->updateLocal($dataProfesional, $idEmpleadoInformacionPersonal);
 
+            $idProfesional = $datosGenerales['cod_profesional_cinda'];
+            $dataProfesional['cod_area'] = $datosGenerales['cod_area'];
+            $this->profesionalCindaController->updateLocal($dataProfesional, $idProfesional);
+
+
+
         } catch (Throwable $e) {
             return response()->json([
                 'message' => 'Error: ' . $e->getMessage(),
