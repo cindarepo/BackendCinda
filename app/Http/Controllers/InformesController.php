@@ -74,13 +74,23 @@ class InformesController extends Controller
         $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
         $f = null;
         if ($area == 0) {
-            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ? and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
+            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+                         and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
             $f = true;
-        } else {
-            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ? and cod_evolucion_ped=? and cod_area_general=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion, $area]);
+        }elseif($area == 1){
+            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+                         and cod_evolucion_ped=? and (cod_area_general=1 or cod_area_general=3 or
+                         cod_area_general=6 or cod_area_general=33 or cod_area_general=34)
+                        ORDER BY fecha_registro_ped ASC',
+                        [$id, $evolucion]);
         }
-        $filename = 'PED-' . $ninoPanda[0]->nombres . '.xlsx';
+        else {
+            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+                         and cod_evolucion_ped=? and cod_area_general=? ORDER BY fecha_registro_ped ASC',
+                        [$id, $evolucion, $area]);
+        }
 
+        $filename = 'PED-' . $ninoPanda[0]->nombres . '.xlsx';
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
