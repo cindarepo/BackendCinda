@@ -77,7 +77,7 @@ class InformesController extends Controller
             $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
             $f = true;
-        }elseif($area == 1){
+        }elseif($area == 1  or $area == 3 or $area == 6 or $area == 33 or $area == 34){
             $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? and (cod_area_general=1 or cod_area_general=3 or
                          cod_area_general=6 or cod_area_general=33 or cod_area_general=34)
