@@ -76,8 +76,8 @@ class UsuarioPanda extends Model
     }*/
     public function panda_plan_beneficios()
     {
-        return $this->belongsToMany(EpsUsuarioPanda::class, EntidadPlanDeBeneficios::class,
-            'cod_usuario_panda', 'cod_administrador_plan_beneficios');
+        return $this->HasMany(EpsUsuarioPanda::class,
+            'cod_usuario_panda', 'cod_usuario_panda');
     }
 
     public function panda_plan_beneficios_activo(){
