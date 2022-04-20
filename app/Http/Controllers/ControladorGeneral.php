@@ -200,8 +200,9 @@ class ControladorGeneral extends Controller
                 $epsNueva['fecha_ingreso_eps'] = now();
                 $epsNueva[ 'estado_eps_usuario'] = 1;
                 $this->epsUsuarioPandaController->storeLocal($epsNueva);
-
+                $epsAnterior = array();
                 $epsAnterior['fecha_egreso_eps'] = now();
+                $epsAnterior['estado_eps_usuario'] = 2;
                 $this->epsUsuarioPandaController->updateLocal($epsAnterior, $codEps);
             }
             /**
