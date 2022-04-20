@@ -18,7 +18,7 @@ class UsuarioPandaController extends Controller
                 'panda_informacion_personal.panda_informacion_vivienda',
                 'panda_informacion_personal.panda_tipo_documento','panda_cod_status_usuario', 'orden_medica',
                 'referencias','referencias.relacionParentesco.parentesco','referencias.referido_informacion_vivienda',
-                'referencias.referido_tipo_documento','panda_plan_beneficios', 'panda_plan_beneficios.relacionEpsUsuario',
+                'referencias.referido_tipo_documento','panda_plan_beneficios',  'panda_plan_beneficios.cod_administrador_plan_beneficios',
                 'cirugias')
                     ->orwhere('panda_cod_status_usuario','=', 1)
                     ->orWhere('panda_cod_status_usuario','=', 2)
@@ -31,7 +31,7 @@ class UsuarioPandaController extends Controller
                 'panda_informacion_personal.panda_informacion_vivienda',
                 'panda_informacion_personal.panda_tipo_documento','panda_cod_status_usuario', 'orden_medica',
                 'referencias','referencias.relacionParentesco.parentesco','referencias.referido_informacion_vivienda',
-                'referencias.referido_tipo_documento','panda_plan_beneficios', 'panda_plan_beneficios.relacionEpsUsuario',
+                'referencias.referido_tipo_documento','panda_plan_beneficios',  'panda_plan_beneficios.cod_administrador_plan_beneficios',
                 'cirugias')
                 ->orwhere('panda_cod_status_usuario','=', 5)
                 ->orWhere('panda_cod_status_usuario','=', 6)
