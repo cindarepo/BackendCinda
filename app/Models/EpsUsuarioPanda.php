@@ -14,14 +14,10 @@ class EpsUsuarioPanda extends Model
     protected $primaryKey = "cod_eps_usuarios";
     protected $fillable = [
          "cod_usuario_panda", "cod_administrador_plan_beneficios",
-         "estado_eps_usuario"
+         "estado_eps_usuario", "fecha_ingreso_eps", "fecha_egreso_eps"
     ];
 
-    /**
-     *
-     * PREGUNTAR EL ESTADO - CREAR TABLA
-     * TODO
-     */
+
 
 
 }
