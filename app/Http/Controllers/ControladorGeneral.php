@@ -164,8 +164,8 @@ class ControladorGeneral extends Controller
             /**
              * INFORMACION DE LA VIVIENDA
              */
+            $dataViviendaID = $datosGenerales['panda_informacion_personal']['cod_informacion_vivienda'];
             $dataVivienda = $datosGenerales['panda_informacion_personal']['panda_informacion_vivienda'];
-            $dataViviendaID = $datosGenerales['panda_informacion_personal']['cod_información_vivienda'];
             $idVivienda = $this->viviendacontroller->updateLocal($dataVivienda, $dataViviendaID);
             /**
              * Datos de la información basica del usuario Panda
