@@ -158,7 +158,7 @@ class ControladorGeneral extends Controller
 
     public function editUsuarioPanda(Request $request)
     {
-        try {
+       // try {
             $datosGenerales = $request->json()->all();
             $id_usuario = $datosGenerales['cod_usuario_panda'];
             /**
@@ -204,11 +204,14 @@ class ControladorGeneral extends Controller
                 $epsAnterior['fecha_egreso_eps'] = now();
                 $this->epsUsuarioPandaController->updateLocal($epsAnterior, $codEps);
             }
+            /**
+
         }catch (Throwable $e) {
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
-        }
+        }*
+             */
         return response()->json([
             'message' => '¡Se actualizo exitosamente!',
             'success' => true

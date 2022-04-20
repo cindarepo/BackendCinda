@@ -15,7 +15,7 @@ class EpsUsuarioPandaController extends Controller
     }
 
     public function buscarEps($idPanda){
-        $ninoPanda = DB::select('select cod_administrador_plan_beneficios, cod_eps_usuarios from eps_usuario_panda where
+        return $ninoPanda = DB::select('select cod_administrador_plan_beneficios, cod_eps_usuarios from eps_usuario_panda where
                                      cod_usuario_panda =?  and estado_eps_usuario=1' , [$idPanda]);
     }
 
