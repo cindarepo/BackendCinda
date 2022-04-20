@@ -158,26 +158,61 @@ class ControladorGeneral extends Controller
 
     public function editUsuarioPanda(Request $request)
     {
-        $datosGenerales = $request->json()->all();
-        $id_usuario = $datosGenerales['id'];
-        /**
-         * INFORMACION DE LA VIVIENDA
-         */
-        $dataVivienda = $datosGenerales['vivienda_panda'];
-        $dataViviendaID = $datosGenerales['vivienda_panda']['cod_vivienda'];
-        $idVivienda = $this->viviendacontroller->updateLocal($dataVivienda, $dataViviendaID);
-        /**
-         * Datos de la información basica del usuario Panda
-         */
-        $dataPanda = $datosGenerales['informacion_basica'];
-        $idPanda = $datosGenerales['informacion_basica']['id_informacion_personal'];
-        $idPandaInformacionPersonal = $this->informacionPandaController->updateLocal($dataPanda, $idPanda);
-        /**
-         *Agregar la información del usuario panda
-         * Devuelve el codigo del usuario panda
-         */
-        $datosUsuarioPanda = $datosGenerales['usuario_panda'];
-        $idUsuarioPanda = $this->pandaUsuarioController->updateLocal($datosUsuarioPanda, $id_usuario);
+        try {
+            $datosGenerales = $request->json()->all();
+            $id_usuario = $datosGenerales['cod_usuario_panda'];
+            /**
+             * INFORMACION DE LA VIVIENDA
+             */
+            $dataVivienda = $datosGenerales['panda_informacion_personal']['panda_informacion_vivienda'];
+            $dataViviendaID = $dataVivienda['cod_información_vivienda'];
+            $idVivienda = $this->viviendacontroller->updateLocal($dataVivienda, $dataViviendaID);
+            /**
+             * Datos de la información basica del usuario Panda
+             */
+            $dataPanda = $datosGenerales['panda_informacion_personal'];
+            $idPanda = $datosGenerales['panda_informacion_personal']['cod_informacion_personal_panda'];
+            $idPandaInformacionPersonal = $this->informacionPandaController->updateLocal($dataPanda, $idPanda);
+
+            /**
+             * Recorrido del arreglo de referencias
+             */
+            $referencias = $datosGenerales['referencias'];
+            foreach ($referencias as $fila) {
+                $cod = $fila['informacion_referido']['cod_informacion_referido'];
+                $datosReferido = $fila['informacion_referido'];
+                $this->informacionreferidoController->updateLocal($datosReferido, $cod);
+
+                $idViviendaReferido = $fila['vivienda_referido']['cod_informacion_vivienda'];
+                $dataVivienda = $fila['vivienda_referido'];
+                $this->viviendacontroller->updateLocal($dataVivienda, $idViviendaReferido);
+
+            }
+
+            $eps = $datosGenerales['panda_plan_beneficios'];
+            $consulta = $this->epsUsuarioPandaController->buscarEps($id_usuario);
+            $codAdmi = $consulta[0]->cod_administrador_plan_beneficios;
+            $codEps = $consulta[0]->cod_eps_usuarios;
+            if($eps != $codAdmi){
+                $epsNueva = array();
+                $epsNueva['cod_usuario_panda'] = $id_usuario;
+                $epsNueva['cod_administrador_plan_beneficios'] = $eps;
+                $epsNueva['fecha_ingreso_eps'] = now();
+                $epsNueva[ 'estado_eps_usuario'] = 1;
+                $this->epsUsuarioPandaController->storeLocal($epsNueva);
+
+                $epsAnterior['fecha_egreso_eps'] = now();
+                $this->epsUsuarioPandaController->updateLocal($epsAnterior, $codEps);
+            }
+        }catch (Throwable $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false], 200);
+        }
+        return response()->json([
+            'message' => '¡Se actualizo exitosamente!',
+            'success' => true
+        ], 201);
 
     }
 
