@@ -12,13 +12,15 @@ class CantidadSesionesUsuario extends Model
     protected $table = "cantidad_sesiones_usuario";
     protected $primaryKey = "cod_cantidad_sesiones_usuario";
     protected $fillable = [
-        "cantidad_fono",
-        "cantidad_fisioterapia",
-        "cantidad_psicologia",
-        "cantidad_teo",
-        "cantidad_musico",
-        "cantidad_habla",
-        "cod_usuario_panda"
+    "cantidad_fono",
+    "cantidad_fisioterapia",
+    "cantidad_psicologia",
+    "cantidad_teo",
+    "cantidad_musico",
+    "cantidad_habla",
+    "cantidad_apoyo",
+    "cantidad_logo",
+    "cod_usuario_panda"
     ];
 }
 

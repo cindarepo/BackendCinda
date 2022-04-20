@@ -14,13 +14,15 @@ class AsignacionProfesionales extends Model
     protected $table = "asignacion_profesionales";
     protected $primaryKey = "cod_asignacion_profesionales";
     protected $fillable = [
-    "cod_nino_panda",
-    "cod_psicologa",
-    "cod_fonoaudiologa",
-    "cod_musica",
-    "cod_teo",
-    "cod_habla",
-    "cod_fisioterapia",
+        "cod_nino_panda",
+        "cod_psicologa",
+        "cod_fonoaudiologa",
+        "cod_musica",
+        "cod_teo",
+        "cod_habla",
+        "cod_fisioterapia",
+        "cod_logogenia",
+        "cod_apoyo"
     ];
 
     public function cod_nino_panda(){
