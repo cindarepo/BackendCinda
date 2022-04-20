@@ -22,7 +22,7 @@ class UsuarioPandaController extends Controller
                 'cirugias')
                     ->orwhere('panda_cod_status_usuario','=', 1)
                     ->orWhere('panda_cod_status_usuario','=', 2)
-                    ->orWhere('panda_cod_status_usuario','=',3 )
+                    ->orWhere('panda_cod_status_usuario','=',3)
                     ->orWhere('panda_cod_status_usuario','=', 4)->get();
         }else{
             $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico',
