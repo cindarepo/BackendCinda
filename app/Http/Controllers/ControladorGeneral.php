@@ -179,7 +179,7 @@ class ControladorGeneral extends Controller
              */
             $referencias = $datosGenerales['referencias'];
             foreach ($referencias as $fila) {
-                $cod = $fila['informacion_referido']['cod_informacion_referido'];
+                $cod = $fila['cod_informacion_referido'];
                 $datosReferido = $fila['informacion_referido'];
                 $this->informacionreferidoController->updateLocal($datosReferido, $cod);
 
