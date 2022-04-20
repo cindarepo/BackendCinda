@@ -189,8 +189,14 @@ class InformesController extends Controller
         $i = 11;
         foreach ($ped as $fila) {
             if ($fila) {
-                $worksheet->getCell("B$i")->setValue($fila->nom_area);
-                $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                if($fila->cod_area_general == 1 or $fila->cod_area_general == 3 or $fila->cod_area_general == 6 or
+                    $fila->cod_area_general == 7 or $fila->cod_area_general == 8 ){
+                    $worksheet->getCell("B$i")->setValue("Fonoaudiologia");
+                    $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                }else{
+                    $worksheet->getCell("B$i")->setValue($fila->nom_area);
+                    $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                }
                 $i++;
             }
         }
