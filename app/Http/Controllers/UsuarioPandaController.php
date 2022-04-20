@@ -76,7 +76,9 @@ class UsuarioPandaController extends Controller
             'panda_informacion_personal.panda_informacion_vivienda.cod_municipio',
             'panda_informacion_personal.panda_tipo_documento','panda_cod_status_usuario', 'orden_medica',
             'referencias','referencias.relacionParentesco.parentesco','referencias.referido_informacion_vivienda',
-            'referencias.referido_tipo_documento', 'panda_plan_beneficios')->where('cod_usuario_panda','=',$id)->get();
+            'referencias.referido_tipo_documento', 'panda_plan_beneficios',
+            'panda_plan_beneficios.cod_administrador_plan_beneficios'
+        )->where('cod_usuario_panda','=',$id)->get();
         return response()->json($data, 201);
     }
 

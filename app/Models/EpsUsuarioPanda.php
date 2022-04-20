@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\EntidadesTipo\EntidadPlanDeBeneficios;
 use App\Models\EntidadesTipo\EstadoRegistro;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,12 @@ class EpsUsuarioPanda extends Model
          "cod_usuario_panda", "cod_administrador_plan_beneficios",
          "estado_eps_usuario", "fecha_ingreso_eps", "fecha_egreso_eps"
     ];
+
+    public function cod_administrador_plan_beneficios(){
+        return $this->hasOne(EntidadPlanDeBeneficios::class,
+            'cod_administrador_plan_beneficios',
+            'cod_administrador_plan_beneficios');
+    }
 
 
 
