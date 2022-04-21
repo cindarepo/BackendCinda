@@ -74,11 +74,10 @@ class InformesController extends Controller
         $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
         $f = null;
         $fono = null;
-        $id_profesional=-1;
+
         if ($area == 0) {
             $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
-            $id_profesional = $ped[0]->cod_profesional;
             $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=1', [$id]);
             $f = true;
         }elseif($area == 1  or $area == 3 or $area == 6 or $area == 7 or $area == 8){
@@ -94,9 +93,9 @@ class InformesController extends Controller
             $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? and cod_area_general=? ORDER BY fecha_registro_ped ASC',
                         [$id, $evolucion, $area]);
-            $id_profesional = $ped[0]->cod_profesional;
             $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=?', [$id, $area]);
         }
+        $id_profesional = $ped[0]->cod_profesional;
         $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
         $filename = 'PED-' . $ninoPanda[0]->nombres . '.xlsx';
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
