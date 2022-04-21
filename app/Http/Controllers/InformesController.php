@@ -74,7 +74,7 @@ class InformesController extends Controller
         $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
         $f = null;
         $fono = null;
-        $id_profesional=null;
+        $id_profesional=-1;
         if ($area == 0) {
             $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
@@ -97,8 +97,6 @@ class InformesController extends Controller
             $id_profesional = $ped[0]->cod_profesional;
             $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=?', [$id, $area]);
         }
-
-
         $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
         $filename = 'PED-' . $ninoPanda[0]->nombres . '.xlsx';
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -143,7 +141,7 @@ class InformesController extends Controller
         $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
         $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
-        if($fono == null){
+        if($id_profesional != -1){
             $worksheet->getCell("G261")->setValue($profesional[0]->nombre);
         }
 
@@ -157,7 +155,7 @@ class InformesController extends Controller
                 if ($f or $fono) {
                     $profesionalFono = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$fila->cod_profesional]);
                     $worksheet->getCell("H$i")->setValue($profesionalFono[0]->nombre);
-                }else{
+                }elseif($id_profesional!=-1){
                     $worksheet->getCell("H$i")->setValue($profesional[0]->nombre);
                 }
                 for ($x = 1; $x < 7; $x++) {
