@@ -132,8 +132,14 @@ class InformesController extends Controller
         $worksheet->getCell("G5")->setValue($ped[0]->anio_evolucion);
         $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
         $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
-        $worksheet->getCell("A9")->setValue($diagnostico[0]->nom_tipo_diagnostico);
-        $worksheet->getCell("E10")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
+        if($diagnostico){
+            $worksheet->getCell("A9")->setValue($diagnostico[0]->nom_tipo_diagnostico);
+            $worksheet->getCell("D9")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
+        }else{
+            $worksheet->getCell("A9")->setValue("TIPO DIAGNOSTICO");
+            $worksheet->getCell("D9")->setValue("Área sin diagnostico");
+        }
+
         $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
         $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
