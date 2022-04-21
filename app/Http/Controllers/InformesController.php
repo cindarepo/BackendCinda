@@ -103,6 +103,12 @@ class InformesController extends Controller
                                         and cod_tipo_diagnostico=?', [$id, $area]);
             }
 
+            if( !$ninoPanda || !$ped) {
+                return response()->json([
+                    'message' => "Ha ocurrido un error. Verifique que el usuario tenga sesiones registradas.",
+                    'success' => false], 200);
+            }
+
             $id_profesional = $ped[0]->cod_profesional;
             $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
             if($fono){
