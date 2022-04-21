@@ -32,7 +32,7 @@ class EvoluvionPedController extends Controller
     public function validarMes($nino, $mes, $anio){
         return $ninoPanda = DB::select('select cod_evolucion_mensual_ped from
                 evolucion_mensual_ped where cod_usuario_panda =? and anio_evolucion=?
-                and cod_mes', [$nino, $anio, $mes]);
+                and cod_mes= ?', [$nino, $anio, $mes]);
     }
 
 
