@@ -100,11 +100,11 @@ class InformesController extends Controller
         $id_profesional = $ped[0]->cod_profesional;
         $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
         if($fono){
-            $filename = 'PED-FONOAUDILOGIA' . $ninoPanda[0]->nombres. '.xlsx';
+            $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
         }else{
-            $filename = 'PED'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
+            $filename = 'PED -'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
         }
-       
+
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
