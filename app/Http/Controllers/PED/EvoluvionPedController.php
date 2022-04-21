@@ -13,6 +13,18 @@ class EvoluvionPedController extends Controller
         $data = $this->getInfoXCodUsuario($id);
         return response()->json($data, 201);
     }
+    public function serviceGetInfoxevolucion($id){
+        $data = $this->getInfoXevolucion($id);
+        return response()->json($data, 201);
+    }
+
+
+
+
+    public function getInfoXevolucion($id) {
+        return EvolucionPed::with('cod_usuario_panda','cod_mes','numero_sesiones')
+            ->where('cod_evolucion_mensual_ped','=',$id)->get();
+    }
 
     public function getInfoXCodUsuario($id) {
         return EvolucionPed::with('cod_usuario_panda','cod_mes','numero_sesiones')

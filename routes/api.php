@@ -397,6 +397,7 @@ Route::prefix('profesionales')->group(
 Route::prefix('evolucion_ped')->group(
     function (){
         Route::get('/u/{id}',[EvoluvionPedController::class, 'serviceGetInfoxcodusuario']);
+        Route::get('/e/{idEvolucion}',[EvoluvionPedController::class, 'serviceGetInfoxevolucion']);
         Route::post('/new',[ControladorGeneral::class, 'storeEvolucionPED']);
     });
 
