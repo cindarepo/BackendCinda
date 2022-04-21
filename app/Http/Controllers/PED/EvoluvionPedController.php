@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PED;
 use Illuminate\Routing\Controller;
 use App\Models\PED\EvolucionPed;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EvoluvionPedController extends Controller
 {
@@ -17,7 +18,7 @@ class EvoluvionPedController extends Controller
         $data = $this->getInfoXevolucion($id);
         return response()->json($data, 201);
     }
-    
+
     public function getInfoXevolucion($id) {
         return EvolucionPed::with('cod_usuario_panda','cod_mes','numero_sesiones')
             ->where('cod_evolucion_mensual_ped','=',$id)->first();
@@ -27,6 +28,13 @@ class EvoluvionPedController extends Controller
         return EvolucionPed::with('cod_usuario_panda','cod_mes','numero_sesiones')
             ->where('cod_usuario_panda','=',$id)->get();
     }
+
+    public function validarMes($nino, $mes, $anio){
+        return $ninoPanda = DB::select('select cod_evolucion_mensual_ped from
+                evolucion_mensual_ped where cod_usuario_panda =? and anio_evolucion=?
+                and cod_mes', [$nino, $anio, $mes]);
+    }
+
 
     public function storeLocal($informacion)
     {

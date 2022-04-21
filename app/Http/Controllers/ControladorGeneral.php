@@ -561,6 +561,18 @@ class ControladorGeneral extends Controller
         try {
 
             $datosGenerales = $request->json()->all();
+
+            $mes = $datosGenerales['cod_mes'];
+            $anio = $datosGenerales['anio_evolucion'];
+            $cod_usuario = $datosGenerales['cod_usuario_panda'];
+            $evolucion = $this->evolucion_mensual_ped->validarMes($cod_usuario,$mes, $anio);
+            if($evolucion){
+                return response()->json([
+                    'message' => '¡Ya existe una evolución con ese mes!',
+                    'success' => false
+                ], 200);
+            }
+
             $dataSesionesPed = $datosGenerales['cantidad_sesiones'];
             $idCantidadSesiones = $this->cantidad_sesiones_ped->storeLocal($dataSesionesPed)->cod_cantidad_sesiones_usuario;
             $datosGenerales['numero_sesiones'] = $idCantidadSesiones;
