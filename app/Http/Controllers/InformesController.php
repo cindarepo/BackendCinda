@@ -71,130 +71,134 @@ class InformesController extends Controller
 
     public function exportarPed($id, $evolucion, $area)
     {
-        $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
-        $f = null;
-        $fono = null;
 
-        if ($area == 0) {
-            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+        try {
+            $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
+            $f = null;
+            $fono = null;
+
+            if ($area == 0) {
+                $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
-            $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=1', [$id]);
-            $f = true;
-            $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres. '.xlsx';
-        }elseif($area == 1  or $area == 3 or $area == 6 or $area == 7 or $area == 8){
-            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+                $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
+                                        and cod_tipo_diagnostico=1', [$id]);
+                $f = true;
+                $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres. '.xlsx';
+            }elseif($area == 1  or $area == 3 or $area == 6 or $area == 7 or $area == 8){
+                $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? and (cod_area_general=1 or cod_area_general=3 or
                          cod_area_general=6 or cod_area_general=7 or cod_area_general=8)
                         ORDER BY fecha_registro_ped ASC',
-                        [$id, $evolucion]);
-            $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=1', [$id]);
-            $fono=true;
+                    [$id, $evolucion]);
+                $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
+                                        and cod_tipo_diagnostico=1', [$id]);
+                $fono=true;
 
-        }
-        else {
-            $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
-                         and cod_evolucion_ped=? and cod_area_general=? ORDER BY fecha_registro_ped ASC',
-                        [$id, $evolucion, $area]);
-            $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ? and cod_tipo_diagnostico=?', [$id, $area]);
-        }
-        $id_profesional = $ped[0]->cod_profesional;
-        $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
-        if($fono){
-            $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
-        }else{
-            $filename = 'PED -'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
-        }
-
-        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/plantilla_ped_excel.xlsx');
-        $worksheet = $spreadsheet->getActiveSheet();
-
-        $worksheet->setTitle("PED -" . $ninoPanda[0]->nombres);
-
-        if ($f) {
-            $worksheet->getCell("C3")->setValue('PED GENERAL');
-            $worksheet->getCell("E10")->setValue('PED GENERAL');
-
-        } else {
-            if($fono){
-                $worksheet->getCell("C3")->setValue("Fonoaudiologia");
-                $worksheet->getCell("E10")->setValue("Fonoaudiologia");
-                $worksheet->getCell("G262")->setValue("Fonoaudiologia");
-
-            }else {
-                $worksheet->getCell("C3")->setValue($ped[0]->nom_area);
-                $worksheet->getCell("E10")->setValue($ped[0]->nom_area);
-                $worksheet->getCell("G262")->setValue($ped[0]->nom_area);
             }
-        }
+            else {
+                $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
+                         and cod_evolucion_ped=? and cod_area_general=? ORDER BY fecha_registro_ped ASC',
+                    [$id, $evolucion, $area]);
+                $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
+                                        and cod_tipo_diagnostico=?', [$id, $area]);
+            }
 
+            $id_profesional = $ped[0]->cod_profesional;
+            $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
+            if($fono){
+                $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
+            }else{
+                $filename = 'PED -'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
+            }
 
-        $worksheet->getCell("D5")->setValue($ped[0]->nom_mes);
-        $worksheet->getCell("G5")->setValue($ped[0]->anio_evolucion);
-        $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
-        $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
-        if($diagnostico){
-            $worksheet->getCell("A9")->setValue($diagnostico[0]->nom_tipo_diagnostico);
-            $worksheet->getCell("D9")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
-        }else{
-            $worksheet->getCell("A9")->setValue("TIPO DIAGNOSTICO");
-            $worksheet->getCell("D9")->setValue("Área sin diagnostico");
-        }
+            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/plantilla_ped_excel.xlsx');
+            $worksheet = $spreadsheet->getActiveSheet();
+            $worksheet->setTitle("PED -" . $ninoPanda[0]->nombres);
 
-        $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
-        $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
+            if ($f) {
+                $worksheet->getCell("C3")->setValue('PED GENERAL');
+                $worksheet->getCell("E10")->setValue('PED GENERAL');
 
-        if($id_profesional != -1){
-            $worksheet->getCell("G261")->setValue($profesional[0]->nombre);
-        }
+            } else {
+                if($fono){
+                    $worksheet->getCell("C3")->setValue("Fonoaudiologia");
+                    $worksheet->getCell("E10")->setValue("Fonoaudiologia");
+                    $worksheet->getCell("G262")->setValue("Fonoaudiologia");
 
-
-
-        $i = 12;
-        foreach ($ped as $fila) {
-            if ($fila) {
-                $worksheet->getCell("B$i")->setValue($fila->detalle_horario_sesion);
-                $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
-                if ($f or $fono) {
-                    $profesionalFono = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$fila->cod_profesional]);
-                    $worksheet->getCell("H$i")->setValue($profesionalFono[0]->nombre);
-                }elseif($id_profesional!=-1){
-                    $worksheet->getCell("H$i")->setValue($profesional[0]->nombre);
+                }else {
+                    $worksheet->getCell("C3")->setValue($ped[0]->nom_area);
+                    $worksheet->getCell("E10")->setValue($ped[0]->nom_area);
+                    $worksheet->getCell("G262")->setValue($ped[0]->nom_area);
                 }
-                for ($x = 1; $x < 7; $x++) {
-                    if ($x == 1) {
-                        $worksheet->getCell("D$i")->setValue($fila->descripcion_inicio);
-                        $i++;
-                    } elseif ($x == 2) {
-                        $worksheet->getCell("D$i")->setValue($fila->detalle_objetivo_ped);
-                        $i++;
-                    } elseif ($x == 3) {
-                        $worksheet->getCell("D$i")->setValue($fila->detalle_actividad_registro);
-                        $i++;
-                    } elseif ($x == 4) {
-                        $worksheet->getCell("D$i")->setValue($fila->detalle_resultado_registro);
-                        $i++;
-                    } elseif ($x == 5) {
-                        $worksheet->getCell("D$i")->setValue($fila->detalle_recomendacion_registro);
-                        $i++;
-                    } else {
-                        $worksheet->getCell("D$i")->setValue($fila->descripcion_final);
-                        $i++;
+            }
+
+
+            $worksheet->getCell("D5")->setValue($ped[0]->nom_mes);
+            $worksheet->getCell("G5")->setValue($ped[0]->anio_evolucion);
+            $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
+            $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
+            if($diagnostico){
+                $worksheet->getCell("A9")->setValue($diagnostico[0]->nom_tipo_diagnostico);
+                $worksheet->getCell("D9")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
+            }else{
+                $worksheet->getCell("A9")->setValue("TIPO DIAGNOSTICO");
+                $worksheet->getCell("D9")->setValue("Área sin diagnostico");
+            }
+            $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
+            $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
+
+            if($id_profesional != -1){
+                $worksheet->getCell("G261")->setValue($profesional[0]->nombre);
+            }
+            $i = 12;
+            foreach ($ped as $fila) {
+                if ($fila) {
+                    $worksheet->getCell("B$i")->setValue($fila->detalle_horario_sesion);
+                    $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                    if ($f or $fono) {
+                        $profesionalFono = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$fila->cod_profesional]);
+                        $worksheet->getCell("H$i")->setValue($profesionalFono[0]->nombre);
+                    }elseif($id_profesional!=-1){
+                        $worksheet->getCell("H$i")->setValue($profesional[0]->nombre);
+                    }
+                    for ($x = 1; $x < 7; $x++) {
+                        if ($x == 1) {
+                            $worksheet->getCell("D$i")->setValue($fila->descripcion_inicio);
+                            $i++;
+                        } elseif ($x == 2) {
+                            $worksheet->getCell("D$i")->setValue($fila->detalle_objetivo_ped);
+                            $i++;
+                        } elseif ($x == 3) {
+                            $worksheet->getCell("D$i")->setValue($fila->detalle_actividad_registro);
+                            $i++;
+                        } elseif ($x == 4) {
+                            $worksheet->getCell("D$i")->setValue($fila->detalle_resultado_registro);
+                            $i++;
+                        } elseif ($x == 5) {
+                            $worksheet->getCell("D$i")->setValue($fila->detalle_recomendacion_registro);
+                            $i++;
+                        } else {
+                            $worksheet->getCell("D$i")->setValue($fila->descripcion_final);
+                            $i++;
+                        }
                     }
                 }
             }
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($filename);
+            $dataFile = public_path(($filename), $filename);
+            $file = file_get_contents($dataFile);
+            $data = base64_encode($file);
+            unlink($dataFile);
+
+        }catch (Throwable $e) {
+            return response()->json([
+                'message' => "Ha ocurrido un error. " . $e->getMessage(),
+                'success' => false], 200);
         }
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($filename);
-        $dataFile = public_path(($filename), $filename);
-        $file = file_get_contents($dataFile);
-        $data = base64_encode($file);
-        unlink($dataFile);
-
         return response()->json([
             'message' => '¡Descarga exitosamente!',
             'data' => [
