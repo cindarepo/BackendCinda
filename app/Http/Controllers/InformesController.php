@@ -139,7 +139,7 @@ class InformesController extends Controller
                 $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
                 if ($f or $fono) {
                     $profesionalFono = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$fila->cod_profesional]);
-                    $worksheet->getCell("H$i")->setValue($profesionalFono->nombre);
+                    $worksheet->getCell("H$i")->setValue($profesionalFono[0]->nombre);
                 }
                 for ($x = 1; $x < 7; $x++) {
                     if ($x == 1) {
