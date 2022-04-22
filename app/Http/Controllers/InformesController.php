@@ -75,7 +75,7 @@ class InformesController extends Controller
         try {
             $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
             $f = null;
-            $fono = null;
+            $fono = false;
 
             if ($area == 0) {
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
@@ -108,8 +108,6 @@ class InformesController extends Controller
                     'success' => false], 200);
             }
 
-            $id_profesional = $ped[0]->cod_profesional;
-            $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
             if($fono){
                 $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
             }elseif ($f){
@@ -156,7 +154,7 @@ class InformesController extends Controller
             $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
             $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
-            if($id_profesional != -1){
+            if(!$f || !$fono){
                 $worksheet->getCell("G261")->setValue($ped[0]->NombreEmpleado);
             }
             $i = 12;
