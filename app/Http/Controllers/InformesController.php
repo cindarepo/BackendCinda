@@ -156,7 +156,7 @@ class InformesController extends Controller
             $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
             if($id_profesional != -1){
-                $worksheet->getCell("G261")->setValue($profesional[0]->nombre);
+                $worksheet->getCell("G261")->setValue($ped[0]->NombreEmpleado);
             }
             $i = 12;
             foreach ($ped as $fila) {
@@ -164,10 +164,9 @@ class InformesController extends Controller
                     $worksheet->getCell("B$i")->setValue($fila->detalle_horario_sesion);
                     $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
                     if ($f or $fono) {
-                        $profesionalFono = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$fila->cod_profesional]);
-                        $worksheet->getCell("H$i")->setValue($profesionalFono[0]->nombre);
+                        $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
                     }elseif($id_profesional!=-1){
-                        $worksheet->getCell("H$i")->setValue($profesional[0]->nombre);
+                        $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
                     }
                     for ($x = 1; $x < 7; $x++) {
                         if ($x == 1) {
