@@ -76,9 +76,6 @@ class InformesController extends Controller
             $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
             $f = null;
             $fono = null;
-            if($area==null){
-                $area=0;
-            }
 
             if ($area == 0) {
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
