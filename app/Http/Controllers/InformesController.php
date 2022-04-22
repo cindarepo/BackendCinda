@@ -217,10 +217,18 @@ class InformesController extends Controller
 
     public function exportarPlanillaFirmas($id, $evolucion)
     {
+        try {
         $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
         $ped = DB::select('select * from ped_nino where cod_usuario_panda = ? and cod_evolucion_ped=? and estado_registro_ped=1', [$id, $evolucion]);
         $eps = DB::select('select nom_administrador_plan_beneficios from eps_paciente where cod_usuario_panda =?', [$id]);
         $filename = 'Planilla Firmas-' . $ninoPanda[0]->nombres . '.xlsx';
+
+        if( !$ninoPanda || !$ped) {
+            return response()->json([
+                'message' => "Ha ocurrido un error. Verifique que el usuario tenga sesiones registradas.",
+                'success' => false], 200);
+        }
+
 
         header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -259,7 +267,11 @@ class InformesController extends Controller
         $file = file_get_contents($dataFile);
         $data = base64_encode($file);
         unlink($dataFile);
-
+        }catch (Throwable $e) {
+            return response()->json([
+                'message' => "Ha ocurrido un error. " . $e->getMessage(),
+                'success' => false], 200);
+        }
         return response()->json([
             'message' => '¡Descarga exitosamente!',
             'data' => [
