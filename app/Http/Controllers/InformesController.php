@@ -154,7 +154,9 @@ class InformesController extends Controller
             $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
             $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
-            if(!$f || !$fono){
+            if($f || $fono){
+                $worksheet->getCell("G261")->setValue("PED general");
+            }else{
                 $worksheet->getCell("G261")->setValue($ped[0]->NombreEmpleado);
             }
             $i = 12;
