@@ -83,7 +83,6 @@ class InformesController extends Controller
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=1', [$id]);
                 $f = true;
-                $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres. '.xlsx';
             }elseif($area == 1  or $area == 3 or $area == 6 or $area == 7 or $area == 8){
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? and (cod_area_general=1 or cod_area_general=3 or
@@ -113,6 +112,8 @@ class InformesController extends Controller
             $profesional = DB::select('select * from profesionales_nombre where cod_profesional_cinda =?', [$id_profesional]);
             if($fono){
                 $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
+            }elseif ($f){
+                $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres. '.xlsx';
             }else{
                 $filename = 'PED -'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
             }
