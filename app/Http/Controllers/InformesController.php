@@ -163,11 +163,8 @@ class InformesController extends Controller
                 if ($fila) {
                     $worksheet->getCell("B$i")->setValue($fila->detalle_horario_sesion);
                     $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
-                    if ($f or $fono) {
-                        $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
-                    }elseif($id_profesional!=-1){
-                        $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
-                    }
+                    $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
+
                     for ($x = 1; $x < 7; $x++) {
                         if ($x == 1) {
                             $worksheet->getCell("D$i")->setValue($fila->descripcion_inicio);
