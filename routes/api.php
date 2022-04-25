@@ -310,6 +310,7 @@ Route::prefix('usuario_panda')->group(
         // Orden medica
         Route::get('/orden',[UsuarioPandaController::class, 'getOrdenMedica']);
         Route::post('/agregarOrdenMedica',[OrdenMedicaController::class, 'store']);
+        Route::get('/estados/all', [UsuarioPandaController::class, 'getStatusUsuarioPanda']);
 
         Route::post('/update',[ControladorGeneral::class, 'editUsuarioPanda']);
         Route::get('/d/{id}',[UsuarioPandaController::class, 'getDiagnostico']);

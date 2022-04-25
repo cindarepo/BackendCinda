@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EstadoUsuarioPanda;
 use App\Models\UsuarioPanda;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -124,4 +125,12 @@ class UsuarioPandaController extends Controller
         return response()->json($asignacion,201);
     }
 
+    public function getStatusUsuarioPanda() {
+        $data = EstadoUsuarioPanda::All();
+        return response()->json([
+            'data' => $data,
+            'message' => "Consulta exitosa.",
+            'success' => true
+        ], 200);
+    }
 }
