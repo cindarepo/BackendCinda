@@ -39,7 +39,7 @@ class CantidadSesionesUsuarioController extends Controller
     public function getSesionesAnterior($idUsuarioPanda)
     {
         return DB::select('select * from cantidad_sesiones_usuario where cod_usuario_panda =?
-        ORDER BY cod_cantidad_sesiones_usuario DESC', [$idUsuarioPanda]);
+        ORDER BY cod_cantidad_sesiones_usuario DESC LIMIT 1', [$idUsuarioPanda]);
     }
 
 
