@@ -180,6 +180,8 @@ class InformesController extends Controller
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fisioterapia);
                 }elseif ($psico){
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_psicologia);
+                }else{
+                    $worksheet->getCell("G261")->setValue("Sin asignación");
                 }
 
             }
