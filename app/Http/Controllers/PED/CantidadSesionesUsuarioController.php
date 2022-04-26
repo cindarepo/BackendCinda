@@ -35,5 +35,12 @@ class CantidadSesionesUsuarioController extends Controller
         ], 200);
     }
 
+    public function getSesionesAnterior($idUsuarioPanda)
+    {
+        $ninoPanda = DB::select('select * from cantidad_sesiones_usuario where cod_usuario_panda =?
+        ORDER BY cod_cantidad_sesiones_usuario DESC', [$idUsuarioPanda]);
+    }
+
+
 
 }

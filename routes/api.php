@@ -5,6 +5,7 @@ use App\Http\Controllers\DocumentoUsuarioPandaController;
 use App\Http\Controllers\InformesController;
 use App\Http\Controllers\PED\ActividadPedController;
 use App\Http\Controllers\PED\AsignacionProfesionalesController;
+use App\Http\Controllers\PED\CantidadSesionesUsuarioController;
 use App\Http\Controllers\PED\DescripcionFinalPedController;
 use App\Http\Controllers\PED\DescripcionInicioPedController;
 use App\Http\Controllers\PED\EvoluvionPedController;
@@ -318,7 +319,7 @@ Route::prefix('usuario_panda')->group(
         Route::post('/u/{id}/{cod}',[UsuarioPandaController::class, 'cambiarEstadoUsuarioPanda']);
         Route::post('/asignacion',[ControladorGeneral::class, 'updateAsignacion']);
         Route::post('/asignacion/{id}',[UsuarioPandaController::class, 'getAsignacionPaciente']);
-
+        Route::get('/a/{id}',[CantidadSesionesUsuarioController::class, 'getSesionesAnterior']);
         Route::get('/asignacion/{id}',[AsignacionProfesionalesController::class, 'getAsignacionByNinoPanda']);
 
 
