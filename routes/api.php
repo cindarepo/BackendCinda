@@ -319,7 +319,7 @@ Route::prefix('usuario_panda')->group(
         Route::post('/u/{id}/{cod}',[UsuarioPandaController::class, 'cambiarEstadoUsuarioPanda']);
         Route::post('/asignacion',[ControladorGeneral::class, 'updateAsignacion']);
         Route::post('/asignacion/{id}',[UsuarioPandaController::class, 'getAsignacionPaciente']);
-        Route::get('/a/{id}',[CantidadSesionesUsuarioController::class, 'getSesionesAnterior']);
+        Route::get('/l/{id}',[CantidadSesionesUsuarioController::class, 'getSesionesAnterior']);
         Route::get('/asignacion/{id}',[AsignacionProfesionalesController::class, 'getAsignacionByNinoPanda']);
 
 
