@@ -76,6 +76,9 @@ class InformesController extends Controller
             $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
             $f = null;
             $fono = false;
+            $teo = false;
+            $psico = false;
+            $fisio = false;
 
             if ($area == 0) {
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
@@ -92,6 +95,8 @@ class InformesController extends Controller
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=1', [$id]);
                 $fono=true;
+                $asignacion_profesionales= DB::select('select nom_fonoaudiologa from
+                              vista_asignacion_profesionales where cod_usuario_panda =?', [$id]);
 
             }
             else {
@@ -100,6 +105,16 @@ class InformesController extends Controller
                     [$id, $evolucion, $area]);
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=?', [$id, $area]);
+                $asignacion_profesionales= DB::select('select * from
+                              vista_asignacion_profesionales where cod_usuario_panda =?', [$id]);
+                if($area==2){
+                    $psico = true;
+                }elseif ($area==4){
+                    $teo = true;
+                }elseif ($area==5){
+                    $fisio = true;
+                }
+
             }
 
             if( !$ninoPanda || !$ped) {
@@ -154,10 +169,19 @@ class InformesController extends Controller
             $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
             $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
-            if($f || $fono){
+            if($f){
                 $worksheet->getCell("G261")->setValue("PED general");
             }else{
-                $worksheet->getCell("G261")->setValue($ped[0]->NombreEmpleado);
+                if($fono){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fonoaudiologa);
+                }elseif ($teo){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_teo);
+                }elseif ($fisio){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fisioterapia);
+                }elseif ($psico){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_psicologia);
+                }
+
             }
             $i = 12;
             foreach ($ped as $fila) {
