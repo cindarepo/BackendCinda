@@ -96,7 +96,7 @@ class InformesController extends Controller
                                         and cod_tipo_diagnostico=1', [$id]);
                 $fono=true;
                 $asignacion_profesionales= DB::select('select nom_fonoaudiologa from
-                              vista_asignacion_profesionales where cod_usuario_panda =?', [$id]);
+                              vista_asignacion_profesionales where cod_nino_panda =?', [$id]);
 
             }
             else {
@@ -106,7 +106,7 @@ class InformesController extends Controller
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=?', [$id, $area]);
                 $asignacion_profesionales= DB::select('select * from
-                              vista_asignacion_profesionales where cod_usuario_panda =?', [$id]);
+                              vista_asignacion_profesionales where cod_nino_panda =?', [$id]);
                 if($area==2){
                     $psico = true;
                 }elseif ($area==4){
