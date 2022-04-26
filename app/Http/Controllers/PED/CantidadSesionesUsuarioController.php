@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PED;
 use App\Models\PED\CantidadSesionesUsuario;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CantidadSesionesUsuarioController extends Controller
 {
