@@ -18,7 +18,6 @@ class UserController extends Controller
     public function authenticate(Request $request)
     {
         $datosGenerales = $request->json()->all();
-
         try {
             $myTTL = 1440; //min
             JWTAuth::factory()->setTTL($myTTL);

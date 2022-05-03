@@ -314,7 +314,7 @@ class InformesController extends Controller
             $referencias = DB::select('select * from referencia_usuario where cod_usuario_panda =?', [$id]);
             $eps = DB::select('select nom_administrador_plan_beneficios from eps_paciente where cod_usuario_panda =?', [$id]);
 
-            if( !$ninoPanda || !$entrevista || !$diagnostico) {
+            if( !$ninoPanda || !$entrevista) {
                 return response()->json([
                     'message' => "Ha ocurrido un error. Verifique que el usuario tenga una entrevista inicial.",
                     'success' => false], 200);
@@ -359,8 +359,14 @@ class InformesController extends Controller
             /**
              * DIAGNOSTICO AUDIOLOGICO
              */
-            $worksheet->getCell("C17")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
-            $worksheet->getCell("C18")->setValue($diagnostico[0]->detalle_diagnostico_cie);
+            if(!$diagnostico){
+                $worksheet->getCell("C17")->setValue('Sin diagnostico');
+                $worksheet->getCell("C18")->setValue('Sin diagnostico');
+            }else{
+                $worksheet->getCell("C17")->setValue($diagnostico[0]->value_estandar_cie . '  ' . $diagnostico[0]->nom_estandar_cie);
+                $worksheet->getCell("C18")->setValue($diagnostico[0]->detalle_diagnostico_cie);
+            }
+
 
             $worksheet->getCell("C19")->setValue($entrevista[0]->entrevista_panda_deteccion);
             $worksheet->getCell("C20")->setValue($entrevista[0]->entrevista_panda_audifonos);
