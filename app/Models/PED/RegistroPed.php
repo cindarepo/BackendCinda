@@ -17,7 +17,7 @@ class RegistroPed extends Model
         "descripcion_inicio", "descripcion_final", "cod_horario_sesion",
         "fecha_registro_ped", "detalle_objetivo_ped", "detalle_actividad_registro",
         "detalle_resultado_registro", "detalle_recomendacion_registro", "cod_profesional", "cod_usuario_panda",
-        "cod_evolucion_ped", "cod_area_general", "estado_registro_ped"
+        "cod_evolucion_ped", "cod_area_general", "estado_registro_ped", "detalle_horario"
     ];
 
     public function cod_evolucion_ped(){
