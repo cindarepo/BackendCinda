@@ -12,7 +12,6 @@ use App\Models\ProfesionalCinda;
 use App\Models\PersonalCinda;
 use App\Models\InformacionVivienda;
 use App\Models\UsuarioPanda;
-use DateTimeZone;
 use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -109,8 +108,7 @@ class ControladorGeneral extends Controller
              * MODIFICAR AL OTRO LADO
              *
              */
-            $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-            $datosUsuarioPanda["panda_fecha_ingreso_usuario"] = $date;
+            $datosUsuarioPanda["panda_fecha_ingreso_usuario"] = now('GMT-5');
             $idUsuarioPanda = $this->pandaUsuarioController->storeLocal($datosUsuarioPanda)->cod_usuario_panda;
 
             /**
@@ -199,12 +197,11 @@ class ControladorGeneral extends Controller
                 $epsNueva = array();
                 $epsNueva['cod_usuario_panda'] = $id_usuario;
                 $epsNueva['cod_administrador_plan_beneficios'] = $eps;
-                $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-                $epsNueva['fecha_ingreso_eps'] = $date;
+                $epsNueva['fecha_ingreso_eps'] = now('GMT-5');
                 $epsNueva[ 'estado_eps_usuario'] = 1;
                 $this->epsUsuarioPandaController->storeLocal($epsNueva);
                 $epsAnterior = array();
-                $epsAnterior['fecha_egreso_eps'] = $date;
+                $epsAnterior['fecha_egreso_eps'] = now('GMT-5');
                 $epsAnterior['estado_eps_usuario'] = 2;
                 $this->epsUsuarioPandaController->updateLocal($epsAnterior, $codEps);
             }
@@ -262,8 +259,7 @@ class ControladorGeneral extends Controller
              * Entrevista
              */
             $datosEntrevista = $datosGenerales['entrevista'];
-            $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-            $datosEntrevista['entrevista_panda_fecha'] =$date;
+            $datosEntrevista['entrevista_panda_fecha'] =now('GMT-5');
             $datosEntrevista['entrevista_panda_entrevistador'] = $id_usuario;
             $this->entrevistaController->storelocal($datosEntrevista);
 
@@ -334,9 +330,9 @@ class ControladorGeneral extends Controller
         $dataProfesional['email'] = $datosGenerales['informacion_personal']['empleado_correo_electronico'];
         $dataProfesional['name'] = $datosGenerales['informacion_personal']['empleado_correo_electronico'];
         $dataProfesional['password'] = Hash::make($datosGenerales['informacion_personal']['empleado_documento_id']);
-        $dataProfesional['fecha_registro'] = now();
-        $dataProfesional['fecha_cambio_clave'] = now();
-        $dataProfesional['fecha_ultimo_ingreso'] = now();
+        $dataProfesional['fecha_registro'] = now('GMT-5');
+        $dataProfesional['fecha_cambio_clave'] = now('GMT-5');
+        $dataProfesional['fecha_ultimo_ingreso'] = now('GMT-5');
         $dataProfesional['estado_usuario'] = 1;
         $dataProfesional['codigo_sesion'] = 1000;
 
@@ -626,7 +622,7 @@ class ControladorGeneral extends Controller
             $idRegistro = $datosGenerales['cod_registro_ped'];
             $objeto = array();
             $objeto['estado_registro_ped'] = 1;
-            $objeto['fecha_registro_ped'] = now('UTC');
+            $objeto['fecha_registro_ped'] = now('GMT-5');
             $objeto['cod_horario_sesion'] =  $datosGenerales['cod_horario_sesion'];
             $objeto['cod_evolucion_ped'] = $datosGenerales['cod_evolucion_ped'];
             $this->registroPedController->updateLocal($objeto, $idRegistro);
@@ -645,23 +641,22 @@ class ControladorGeneral extends Controller
     public function storeRegistroPed(Request $request)
     {
 
-        //try {
+        try {
             $datosGenerales = $request->json()->all();
             $sesion = $datosGenerales;
             $sesion['estado_registro_ped'] = $datosGenerales['estado_registro_ped'];
             if ($sesion['estado_registro_ped'] == 1) {
-                //$date = new DateTime("now", new DateTimeZone('America/Bogota'));
                 $sesion['fecha_registro_ped'] = now('GMT-5');
             } else {
                 $sesion['fecha_registro_ped'] = null;
             }
             $this->registroPedController->storeLocal($sesion);
-         /**}
+         }
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Sucedio un error!',
                 'success' => false], 200);
-        }*/
+        }
         return response()->json([
             'message' => '¡Se registro exitosamente!',
             'success' => true
@@ -697,8 +692,7 @@ class ControladorGeneral extends Controller
             //$dataUsuarioFormulario['cod_tipo_formulario_valoracion'] = $datosGenerales[''] ;
             $dataUsuarioFormulario['cod_usuario_panda'] = $idUsuarioPanda;
             $dataUsuarioFormulario['cod_profesional'] = $idProfesional;
-            $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-            $dataUsuarioFormulario['fecha_registro_formulario'] =$date;
+            $dataUsuarioFormulario['fecha_registro_formulario'] =now('GMT-5');
             $codFormularioValoracion = $this->usuarioFormularioValoracionController->storeLocal($dataUsuarioFormulario)->cod_usuario_formulario_valoracion;
 
             /**
