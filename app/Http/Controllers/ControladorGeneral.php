@@ -595,9 +595,7 @@ class ControladorGeneral extends Controller
 
     public function editarEvolucionPED(Request $request){
         try {
-
             $datosGenerales = $request->json()->all();
-
             $dataSesionesPed = $datosGenerales['cantidad_sesiones'];
             $id = $datosGenerales['cod_cantidad_sesiones_usuario'];
             $this->cantidad_sesiones_ped->updateLocal($dataSesionesPed, $id);
