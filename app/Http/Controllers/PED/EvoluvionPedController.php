@@ -41,22 +41,11 @@ class EvoluvionPedController extends Controller
         $informacionEvolucion = EvolucionPed::create($informacion);
         return $informacionEvolucion;
     }
-    public function store(Request $request)
+
+    public function updateLocal($info, $id)
     {
-        $data = EvolucionPed::create($request->input());
-        return response()->json([
-            'message' => "Successfully created",
-            'success' => true,
-            'data' => $data
-        ], 201);
-    }
-    public function update(Request $request, $id)
-    {
-        EvolucionPed::find($id)->update($request->input());
-        return response()->json([
-            'message' => "Successfully updated",
-            'success' => true
-        ], 200);
+        $informacion = EvolucionPed::find($id)->update($info);
+        return $informacion;
     }
 
 }

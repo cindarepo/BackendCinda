@@ -13,6 +13,7 @@ class CantidadSesionesUsuarioController extends Controller
         $data = CantidadSesionesUsuario::All();
         return response()->json($data, 201);
     }
+
     public function storeLocal($informacion)
     {
         $informacionSesiones = CantidadSesionesUsuario::create($informacion);
@@ -27,13 +28,10 @@ class CantidadSesionesUsuarioController extends Controller
             'data' => $data
         ], 201);
     }
-    public function update(Request $request, $id)
+    public function updateLocal($info, $id)
     {
-        CantidadSesionesUsuario::find($id)->update($request->input());
-        return response()->json([
-            'message' => "Successfully updated",
-            'success' => true
-        ], 200);
+        $informacion = CantidadSesionesUsuario::find($id)->update($info);
+        return $informacion;
     }
 
     public function getSesionesAnterior($idUsuarioPanda)

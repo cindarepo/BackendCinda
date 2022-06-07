@@ -26,6 +26,11 @@ class AsignacionProfesionalesController extends Controller
                 'cod_musica','cod_musica.cod_personal_cinda', 'cod_musica.cod_personal_cinda.cod_informacion_personal_empleado',
                 'cod_teo','cod_teo.cod_personal_cinda', 'cod_teo.cod_personal_cinda.cod_informacion_personal_empleado',
                 'cod_fisioterapia','cod_fisioterapia.cod_personal_cinda', 'cod_fisioterapia.cod_personal_cinda.cod_informacion_personal_empleado',
+                'cod_logogenia','cod_logogenia.cod_personal_cinda', 'cod_logogenia.cod_personal_cinda.cod_informacion_personal_empleado',
+                'cod_apoyo','cod_apoyo.cod_personal_cinda', 'cod_apoyo.cod_personal_cinda.cod_informacion_personal_empleado',
+
+
+
             )->first();
 
         return response()->json([

@@ -68,4 +68,19 @@ class AsignacionProfesionales extends Model
             'cod_fisioterapia');
     }
 
+    public function  cod_logogenia(){
+        return $this->hasMany(ProfesionalCinda::class,
+            'cod_profesional_cinda',
+            'cod_logogenia');
+    }
+
+    public function  cod_apoyo(){
+        return $this->hasMany(ProfesionalCinda::class,
+            'cod_profesional_cinda',
+            'cod_apoyo');
+    }
+
+
+
+
 }
