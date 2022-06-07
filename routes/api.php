@@ -401,6 +401,8 @@ Route::prefix('evolucion_ped')->group(
         Route::get('/u/{id}',[EvoluvionPedController::class, 'serviceGetInfoxcodusuario']);
         Route::get('/e/{idEvolucion}',[EvoluvionPedController::class, 'serviceGetInfoxevolucion']);
         Route::post('/new',[ControladorGeneral::class, 'storeEvolucionPED']);
+        Route::post('/edit',[ControladorGeneral::class, 'editarEvolucionPED']);
+
     });
 
 Route::prefix('registro_ped')->group(
