@@ -13,7 +13,6 @@ use App\Models\PersonalCinda;
 use App\Models\InformacionVivienda;
 use App\Models\UsuarioPanda;
 use DateTimeZone;
-use Faker\Provider\DateTime;
 use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -627,8 +626,7 @@ class ControladorGeneral extends Controller
             $idRegistro = $datosGenerales['cod_registro_ped'];
             $objeto = array();
             $objeto['estado_registro_ped'] = 1;
-            $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-            $objeto['fecha_registro_ped'] = $date;
+            $objeto['fecha_registro_ped'] = now('UTC');
             $objeto['cod_horario_sesion'] =  $datosGenerales['cod_horario_sesion'];
             $objeto['cod_evolucion_ped'] = $datosGenerales['cod_evolucion_ped'];
             $this->registroPedController->updateLocal($objeto, $idRegistro);
