@@ -644,7 +644,8 @@ class ControladorGeneral extends Controller
 
     public function storeRegistroPed(Request $request)
     {
-        try {
+
+        //try {
             $datosGenerales = $request->json()->all();
             $sesion = $datosGenerales;
             $sesion['estado_registro_ped'] = $datosGenerales['estado_registro_ped'];
@@ -655,11 +656,12 @@ class ControladorGeneral extends Controller
                 $sesion['fecha_registro_ped'] = null;
             }
             $this->registroPedController->storeLocal($sesion);
-        } catch (Throwable $e) {
+         /**}
+        catch (Throwable $e) {
             return response()->json([
                 'message' => 'Sucedio un error!',
                 'success' => false], 200);
-        }
+        }*/
         return response()->json([
             'message' => '¡Se registro exitosamente!',
             'success' => true
