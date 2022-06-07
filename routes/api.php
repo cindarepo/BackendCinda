@@ -356,7 +356,7 @@ Route::prefix('mail')->group(
 Route::prefix('asignacion_profesionales')->group(
     function (){
         // Get all patients for professional and area (list)
-        Route::get('/{idProfesional}',[AsignacionProfesionalesController::class, 'getInfoUsuariosxProfesional']);
+        //Route::get('/{idProfesional}',[AsignacionProfesionalesController::class, 'getInfoUsuariosxProfesional']);
         // Get assigned patients for professional
         Route::get('/{id}',[AsignacionProfesionalesController::class, 'getAsignacion']);
     });
