@@ -188,7 +188,7 @@ class InformesController extends Controller
             $i = 12;
             foreach ($ped as $fila) {
                 if ($fila) {
-                    $worksheet->getCell("B$i")->setValue($fila->detalle_horario_sesion);
+                    $worksheet->getCell("B$i")->setValue($fila->detalle_horario);
                     $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
                     $worksheet->getCell("H$i")->setValue($fila->NombreEmpleado);
 
