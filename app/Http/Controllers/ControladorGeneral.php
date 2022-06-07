@@ -650,8 +650,8 @@ class ControladorGeneral extends Controller
             $sesion = $datosGenerales;
             $sesion['estado_registro_ped'] = $datosGenerales['estado_registro_ped'];
             if ($sesion['estado_registro_ped'] == 1) {
-                $date = new DateTime("now", new DateTimeZone('America/Bogota'));
-                $sesion['fecha_registro_ped'] =  $date;
+                //$date = new DateTime("now", new DateTimeZone('America/Bogota'));
+                $sesion['fecha_registro_ped'] = now('UTC');
             } else {
                 $sesion['fecha_registro_ped'] = null;
             }
