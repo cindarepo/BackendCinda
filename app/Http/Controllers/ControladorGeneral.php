@@ -12,6 +12,7 @@ use App\Models\ProfesionalCinda;
 use App\Models\PersonalCinda;
 use App\Models\InformacionVivienda;
 use App\Models\UsuarioPanda;
+use DateTimeZone;
 use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -645,7 +646,7 @@ class ControladorGeneral extends Controller
     public function storeRegistroPed(Request $request)
     {
 
-        //try {
+        try {
             $datosGenerales = $request->json()->all();
             $sesion = $datosGenerales;
             $sesion['estado_registro_ped'] = $datosGenerales['estado_registro_ped'];
@@ -656,12 +657,12 @@ class ControladorGeneral extends Controller
                 $sesion['fecha_registro_ped'] = null;
             }
             $this->registroPedController->storeLocal($sesion);
-         /**}
+        }
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Sucedio un error!',
                 'success' => false], 200);
-        }*/
+        }
         return response()->json([
             'message' => '¡Se registro exitosamente!',
             'success' => true
