@@ -221,7 +221,7 @@ class InformesController extends Controller
             $dataFile = public_path(($filename), $filename);
             $file = file_get_contents($dataFile);
             $data = base64_encode($file);
-            //unlink($dataFile);
+            unlink($dataFile);
 
         }catch (Throwable $e) {
             return response()->json([
@@ -290,7 +290,7 @@ class InformesController extends Controller
         $dataFile = public_path(($filename), $filename);
         $file = file_get_contents($dataFile);
         $data = base64_encode($file);
-       // unlink($dataFile);
+        unlink($dataFile);
         }catch (Throwable $e) {
             return response()->json([
                 'message' => "Ha ocurrido un error. " . $e->getMessage(),
