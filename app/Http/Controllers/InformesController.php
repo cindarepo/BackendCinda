@@ -82,7 +82,7 @@ class InformesController extends Controller
 
             if ($area == 0) {
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
-                         and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC', [$id, $evolucion]);
+                         and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC, ped_nino.detalle_horario_sesion', [$id, $evolucion]);
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=1', [$id]);
                 $f = true;
@@ -90,7 +90,7 @@ class InformesController extends Controller
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? and (cod_area_general=1 or cod_area_general=3 or
                          cod_area_general=6 or cod_area_general=7 or cod_area_general=8)
-                        ORDER BY fecha_registro_ped ASC',
+                        ORDER BY fecha_registro_ped ASC, ped_nino.detalle_horario_sesion ',
                     [$id, $evolucion]);
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=1', [$id]);
@@ -221,7 +221,7 @@ class InformesController extends Controller
             $dataFile = public_path(($filename), $filename);
             $file = file_get_contents($dataFile);
             $data = base64_encode($file);
-            unlink($dataFile);
+            //unlink($dataFile);
 
         }catch (Throwable $e) {
             return response()->json([
@@ -242,7 +242,8 @@ class InformesController extends Controller
     {
         try {
         $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
-        $ped = DB::select('select * from ped_nino where cod_usuario_panda = ? and cod_evolucion_ped=? and estado_registro_ped=1', [$id, $evolucion]);
+        $ped = DB::select('select * from ped_nino where cod_usuario_panda = ? and cod_evolucion_ped=?
+                         and estado_registro_ped=1 order by fecha_registro_ped ASC ', [$id, $evolucion]);
         $eps = DB::select('select nom_administrador_plan_beneficios from eps_paciente where cod_usuario_panda =?', [$id]);
         $filename = 'Planilla Firmas-' . $ninoPanda[0]->nombres . '.xlsx';
 
@@ -289,7 +290,7 @@ class InformesController extends Controller
         $dataFile = public_path(($filename), $filename);
         $file = file_get_contents($dataFile);
         $data = base64_encode($file);
-        unlink($dataFile);
+       // unlink($dataFile);
         }catch (Throwable $e) {
             return response()->json([
                 'message' => "Ha ocurrido un error. " . $e->getMessage(),
