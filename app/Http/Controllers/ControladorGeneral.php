@@ -148,6 +148,12 @@ class ControladorGeneral extends Controller
                 $idReferenciaUsuario = $this->referenciaPandaController->storeLocal($usuarioPandaReferencia)->cod_referencia_usuario_panda;
             }
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $idUsuarioPanda;
+            $logs['detalle_funcion'] = "registrar informacion usuario panda";
+            $logs['detalle_tabla'] = "usuario_panda";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false
@@ -210,6 +216,12 @@ class ControladorGeneral extends Controller
             }
 
         }catch (Throwable $e) {
+           $logs = array();
+           $logs['cod_usuario'] = $id_usuario;
+           $logs['detalle_funcion'] = "Editar informacion usuario panda";
+           $logs['detalle_tabla'] = "usuario_panda";
+           $logs['string_log'] = $e->getMessage();
+           $this->logsController->storeLocal($logs);
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
@@ -267,6 +279,12 @@ class ControladorGeneral extends Controller
             $this->entrevistaController->storelocal($datosEntrevista);
 
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $id_usuario;
+            $logs['detalle_funcion'] = "Registrar entrevista";
+            $logs['detalle_tabla'] = "entrevista_panda";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
@@ -428,6 +446,12 @@ class ControladorGeneral extends Controller
             $this->correoController->sendMailBienvenida($correo);
 
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $idProfesional;
+            $logs['detalle_funcion'] = "Registrar información funcionario";
+            $logs['detalle_tabla'] = "profesional_cinda";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
@@ -468,6 +492,12 @@ class ControladorGeneral extends Controller
 
 
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $idProfesional;
+            $logs['detalle_funcion'] = "Editar información funcionario";
+            $logs['detalle_tabla'] = "profesional_cinda";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
             return response()->json([
                 'message' => 'Error: ' . $e->getMessage(),
                 'success' => false], 200);
@@ -604,6 +634,13 @@ class ControladorGeneral extends Controller
             $this->cantidad_sesiones_ped->updateLocal($dataSesionesPed, $id);
             $data = $this->evolucion_mensual_ped->getInfoXCodUsuario($datosGenerales['cod_usuario_panda']);
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $datosGenerales['cod_usuario_panda'];
+            $logs['detalle_funcion'] = "Editar cantidad sesioenes PED";
+            $logs['detalle_tabla'] = "cantidad_sesiones_usuario";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
+
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
@@ -655,15 +692,16 @@ class ControladorGeneral extends Controller
          }
 
         catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $datosGenerales['cod_usuario_panda'];
+            $logs['detalle_funcion'] = "Registrar PED";
+            $logs['detalle_tabla'] = "registro_ped";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
+
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
-                $logs = array();
-                $logs['cod_usuario'] = $datosGenerales['cod_usuario_panda'];
-                $logs['detalle_funcion'] = "Registrar PED";
-                $logs['detalle_tabla'] = "registro_ped";
-                $logs['string_log'] = $e->getMessage();
-                $this->logsController->storeLocal($logs);
         }
         return response()->json([
             'message' => '¡Se registro exitosamente!',
@@ -754,8 +792,14 @@ class ControladorGeneral extends Controller
                 $this->pandaUsuarioController->cambiarEstadoUsuarioPanda($idUsuario, 3);
             }
 
-
         } catch (Throwable $e) {
+            $logs = array();
+            $logs['cod_usuario'] = $idUsuario;
+            $logs['detalle_funcion'] = "Registrar documentos";
+            $logs['detalle_tabla'] = "documentos_usuario_panda";
+            $logs['string_log'] = $e->getMessage();
+            $this->logsController->storeLocal($logs);
+
             return response()->json([
                 'data' => $e->getMessage(),
                 'message' => 'Sucedio un error!',
