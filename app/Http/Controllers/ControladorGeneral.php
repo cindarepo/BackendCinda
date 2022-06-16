@@ -8,6 +8,7 @@ use App\Http\Controllers\PED\EvoluvionPedController;
 use App\Http\Controllers\PED\RegistroPedController;
 use App\Models\InformacionComplementariaEmpleado;
 use App\Models\InformacionPersonalEmpleado;
+use App\Models\Logs;
 use App\Models\ProfesionalCinda;
 use App\Models\PersonalCinda;
 use App\Models\InformacionVivienda;
@@ -48,6 +49,7 @@ class ControladorGeneral extends Controller
     private $RespuestaInformacionFormularioController;
     private $DocumentosPandaController;
     private $correoController;
+    private $logsController;
 
     function __construct()
     {
@@ -74,6 +76,7 @@ class ControladorGeneral extends Controller
         $this->DocumentosPandaController = new DocumentoUsuarioPandaController();
         $this->asignacionProfesionalesController = new AsignacionProfesionalesController();
         $this->correoController = new CorreosController();
+        $this->logsController = new LogsController();
 
     }
 
@@ -655,6 +658,12 @@ class ControladorGeneral extends Controller
             return response()->json([
                 'message' => $e->getMessage(),
                 'success' => false], 200);
+                $logs = array();
+                $logs['cod_usuario'] = $datosGenerales['cod_usuario_panda'];
+                $logs['detalle_funcion'] = "Registrar PED";
+                $logs['detalle_tabla'] = "registro_ped";
+                $logs['string_log'] = $e->getMessage();
+                $this->logsController->storeLocal($logs);
         }
         return response()->json([
             'message' => '¡Se registro exitosamente!',
