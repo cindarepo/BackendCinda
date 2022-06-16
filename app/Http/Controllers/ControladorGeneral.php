@@ -650,9 +650,10 @@ class ControladorGeneral extends Controller
             }
             $this->registroPedController->storeLocal($sesion);
          }
+
         catch (Throwable $e) {
             return response()->json([
-                'message' => 'Sucedio un error!',
+                'message' => $e->getMessage(),
                 'success' => false], 200);
         }
         return response()->json([
