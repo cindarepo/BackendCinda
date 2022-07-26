@@ -654,7 +654,6 @@ class ControladorGeneral extends Controller
 
     public function storeRegistroPedAcumulado(Request $request)
     {
-
         try {
             $datosGenerales = $request->json()->all();
             $idRegistro = $datosGenerales['cod_registro_ped'];
@@ -676,9 +675,29 @@ class ControladorGeneral extends Controller
         ], 200);
     }
 
+    public function pasarAcumulada($id){
+        try {
+            $objeto = array();
+            $objeto['estado_registro_ped'] = 2;
+            $objeto['fecha_registro_ped'] = null;
+            $this->registroPedController->updateLocal($objeto, $id);
+
+        } catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Error' . $e->getMessage(),
+                'success' => false], 200);
+        }
+
+        return response()->json([
+            'message' => '¡Se cambio a acumuladas exitosamente!',
+            'success' => true
+        ], 200);
+
+    }
+
+
     public function storeRegistroPed(Request $request)
     {
-
         try {
             $datosGenerales = $request->json()->all();
             $sesion = $datosGenerales;

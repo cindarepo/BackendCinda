@@ -411,6 +411,8 @@ Route::prefix('registro_ped')->group(
         Route::get('/e/{evolucion}/{estado}',[RegistroPedController::class, 'getInfoxcodEvolucion']);
         Route::get('/a/{cod_usuario}/{area}',[RegistroPedController::class, 'getPedAcumuladosxCodUsuarioxArea']);
 
+        Route::get('/acumulada/{id}',[ControladorGeneral::class, 'pasarAcumulada']);
+
         // Guarda acumuladas y no acumuladas
         Route::post('/new',[ControladorGeneral::class, 'storeRegistroPed']);
 
