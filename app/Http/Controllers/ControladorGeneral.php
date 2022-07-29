@@ -659,9 +659,10 @@ class ControladorGeneral extends Controller
             $idRegistro = $datosGenerales['cod_registro_ped'];
             $objeto = array();
             $objeto['estado_registro_ped'] = 1;
-            $objeto['fecha_registro_ped'] = now('GMT-5');
+            $objeto['fecha_registro_ped'] = $datosGenerales['fecha_registro_ped'] ;
             $objeto['cod_horario_sesion'] =  $datosGenerales['cod_horario_sesion'];
             $objeto['cod_evolucion_ped'] = $datosGenerales['cod_evolucion_ped'];
+            $objeto['detalle_horario'] = $datosGenerales['detalle_horario'];
             $this->registroPedController->updateLocal($objeto, $idRegistro);
 
         } catch (Throwable $e) {
