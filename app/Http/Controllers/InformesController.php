@@ -166,8 +166,8 @@ class InformesController extends Controller
                 $worksheet->getCell("A9")->setValue("TIPO DIAGNOSTICO");
                 $worksheet->getCell("D9")->setValue("Área sin diagnostico");
             }
-            $worksheet->getCell("f6")->setValue($ninoPanda[0]->panda_documento_id);
-            $worksheet->getCell("f7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
+            $worksheet->getCell("G6")->setValue($ninoPanda[0]->panda_documento_id);
+            $worksheet->getCell("c7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
             if($f){
                 $worksheet->getCell("G261")->setValue("PED general");
