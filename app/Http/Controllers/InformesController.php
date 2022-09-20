@@ -7,6 +7,11 @@ use App\Models\UsuarioPanda;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Imagick;
+use Nette\Utils\Image;
+use phpDocumentor\Reflection\Utils;
+use PhpOffice\PhpSpreadsheet\Exception;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
@@ -79,7 +84,8 @@ class InformesController extends Controller
             $teo = false;
             $psico = false;
             $fisio = false;
-
+            $firma = "";
+            $codProfesional = 0;
             if ($area == 0) {
                 $ped = DB::select('select * from ped_nino where estado_registro_ped = 1 and cod_usuario_panda = ?
                          and cod_evolucion_ped=? ORDER BY fecha_registro_ped ASC, ped_nino.detalle_horario_sesion', [$id, $evolucion]);
@@ -95,8 +101,11 @@ class InformesController extends Controller
                 $diagnostico = DB::select('select * from diagnostico_ciexUsuario where cod_usuario_panda = ?
                                         and cod_tipo_diagnostico=1', [$id]);
                 $fono=true;
-                $asignacion_profesionales= DB::select('select nom_fonoaudiologa from
+                $asignacion_profesionales= DB::select('select nom_fonoaudiologa, cod_fonoaudiologa from
                               vista_asignacion_profesionales where cod_nino_panda =?', [$id]);
+
+                $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                    [$asignacion_profesionales[0]->cod_fonoaudiologa]);
 
             }
             else {
@@ -116,6 +125,7 @@ class InformesController extends Controller
                 }
 
             }
+
 
             if( !$ninoPanda || !$ped) {
                 return response()->json([
@@ -169,22 +179,8 @@ class InformesController extends Controller
             $worksheet->getCell("G6")->setValue($ninoPanda[0]->panda_documento_id);
             $worksheet->getCell("c7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
 
-            if($f){
-                $worksheet->getCell("G261")->setValue("PED general");
-            }else{
-                if($fono){
-                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fonoaudiologa);
-                }elseif ($teo){
-                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_teo);
-                }elseif ($fisio){
-                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fisioterapia);
-                }elseif ($psico){
-                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_psicologia);
-                }else{
-                    $worksheet->getCell("G261")->setValue("Sin asignación");
-                }
 
-            }
+
             $i = 12;
             foreach ($ped as $fila) {
                 if ($fila) {
@@ -216,17 +212,56 @@ class InformesController extends Controller
                 }
             }
 
+            $drawing = new Drawing();
+            if($f){
+                $worksheet->getCell("G261")->setValue("PED general");
+            }else{
+                if($fono){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fonoaudiologa);
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fonoaudiologa);
+                }elseif ($teo){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_teo);
+                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                        [$asignacion_profesionales[0]->cod_teo]);
+                }elseif ($fisio){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fisioterapia);
+                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                        [$asignacion_profesionales[0]->cod_fisioterapia]);
+                }elseif ($psico){
+                    $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_psicologia);
+                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                        [$asignacion_profesionales[0]->cod_psicologa]);
+                }else{
+                    $worksheet->getCell("G261")->setValue("Sin asignación");
+                }
+
+                if($firma){
+                    file_put_contents('reportTemplates/'.$firma[0]->cod_profesional.'.png', $firma[0]->firma_profesional);
+                    $drawing->setPath('reportTemplates/'.$firma[0]->cod_profesional.'.png');
+                }else{
+                    $drawing->setPath('reportTemplates/firma.png');
+                }
+
+            }
+
+            $drawing->setHeight(90);
+            $drawing->setCoordinates('E255');
+            $drawing->setOffsetX(100);
+            $drawing->setWorksheet($spreadsheet->getActiveSheet());
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);
             $dataFile = public_path(($filename), $filename);
             $file = file_get_contents($dataFile);
             $data = base64_encode($file);
             unlink($dataFile);
+            unlink('reportTemplates/'.$firma[0]->cod_profesional.'.png');
 
         }catch (Throwable $e) {
             return response()->json([
                 'message' => "Ha ocurrido un error. " . $e->getMessage(),
                 'success' => false], 200);
+        } catch (Exception $e) {
+        } catch (\ImagickException $e) {
         }
         return response()->json([
             'message' => '¡Descarga exitosamente!',
