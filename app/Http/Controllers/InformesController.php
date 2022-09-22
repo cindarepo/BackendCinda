@@ -212,6 +212,11 @@ class InformesController extends Controller
                 }
             }
 
+           for ($x = $i; $x <= 252; $x++){
+               $spreadsheet->getActiveSheet()->getRowDimension($x)->setVisible(false);
+           }
+
+
             $drawing = new Drawing();
             if($f){
                 $worksheet->getCell("G261")->setValue("PED general");
@@ -243,6 +248,7 @@ class InformesController extends Controller
                 }
 
             }
+
 
             $drawing->setHeight(90);
             $drawing->setCoordinates('E255');
