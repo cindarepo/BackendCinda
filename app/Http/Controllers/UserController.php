@@ -23,7 +23,7 @@ class UserController extends Controller
             JWTAuth::factory()->setTTL($myTTL);
             if (!$token = JWTAuth::attempt($datosGenerales)) {
                 return response()->json(['error' => 'invalid_credentials',
-                    'token' => $token], 400);
+                    'token' => $token], 200);
             }
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
