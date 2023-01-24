@@ -7,7 +7,7 @@ use App\Models\UsuarioPanda;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Imagick;
+
 use Nette\Utils\Image;
 use phpDocumentor\Reflection\Utils;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -147,6 +147,8 @@ class InformesController extends Controller
             $worksheet = $spreadsheet->getActiveSheet();
             $worksheet->setTitle("PED -" . $ninoPanda[0]->nombres);
 
+
+
             if ($f) {
                 $worksheet->getCell("C3")->setValue('PED GENERAL');
                 $worksheet->getCell("E10")->setValue('PED GENERAL');
@@ -182,6 +184,7 @@ class InformesController extends Controller
 
 
             $i = 12;
+
             foreach ($ped as $fila) {
                 if ($fila) {
                     $worksheet->getCell("B$i")->setValue($fila->detalle_horario);
@@ -240,27 +243,29 @@ class InformesController extends Controller
                     $worksheet->getCell("G261")->setValue("Sin asignación");
                 }
 
+                /**
                 if($firma){
                     file_put_contents('reportTemplates/'.$firma[0]->cod_profesional.'.png', $firma[0]->firma_profesional);
                     $drawing->setPath('reportTemplates/'.$firma[0]->cod_profesional.'.png');
                 }else{
                     $drawing->setPath('reportTemplates/firma.png');
                 }
-
+                 *          $drawing->setHeight(90);
+                $drawing->setCoordinates('E255');
+                $drawing->setOffsetX(100);
+                $drawing->setWorksheet($spreadsheet->getActiveSheet());
+*/
             }
 
 
-            $drawing->setHeight(90);
-            $drawing->setCoordinates('E255');
-            $drawing->setOffsetX(100);
-            $drawing->setWorksheet($spreadsheet->getActiveSheet());
+
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);
             $dataFile = public_path(($filename), $filename);
             $file = file_get_contents($dataFile);
             $data = base64_encode($file);
             unlink($dataFile);
-            unlink('reportTemplates/'.$firma[0]->cod_profesional.'.png');
+            //unlink('reportTemplates/'.$firma[0]->cod_profesional.'.png');
 
         }catch (Throwable $e) {
             return response()->json([

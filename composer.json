@@ -14,8 +14,7 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "dev-NumberFormatMask-Helpers",
         "phpoffice/phpword": "^0.18.2",
-        "tymon/jwt-auth": "dev-develop",
-        "ext-imagick": "*"
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
