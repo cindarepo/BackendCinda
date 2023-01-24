@@ -7,7 +7,7 @@ use App\Models\UsuarioPanda;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-
+use Imagick;
 use Nette\Utils\Image;
 use phpDocumentor\Reflection\Utils;
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -243,21 +243,19 @@ class InformesController extends Controller
                     $worksheet->getCell("G261")->setValue("Sin asignación");
                 }
 
-                /**
+
                 if($firma){
                     file_put_contents('reportTemplates/'.$firma[0]->cod_profesional.'.png', $firma[0]->firma_profesional);
                     $drawing->setPath('reportTemplates/'.$firma[0]->cod_profesional.'.png');
                 }else{
                     $drawing->setPath('reportTemplates/firma.png');
                 }
-                 *          $drawing->setHeight(90);
+
+                $drawing->setHeight(90);
                 $drawing->setCoordinates('E255');
                 $drawing->setOffsetX(100);
                 $drawing->setWorksheet($spreadsheet->getActiveSheet());
-*/
             }
-
-
 
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);
