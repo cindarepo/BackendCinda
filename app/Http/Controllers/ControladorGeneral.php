@@ -447,7 +447,7 @@ class ControladorGeneral extends Controller
 
         } catch (Throwable $e) {
             $logs = array();
-            $logs['cod_usuario'] = $idProfesional;
+            $logs['cod_usuario'] = 1;
             $logs['detalle_funcion'] = "Registrar información funcionario";
             $logs['detalle_tabla'] = "profesional_cinda";
             $logs['string_log'] = $e->getMessage();
