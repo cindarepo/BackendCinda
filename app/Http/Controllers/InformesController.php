@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Models\UsuarioPanda;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Imagick;
 use Nette\Utils\Image;
 use phpDocumentor\Reflection\Utils;
@@ -17,8 +20,10 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\TemplateProcessor;
-use PDF;
 use Illuminate\Support\Facades\File;
+use PhpOffice\PhpSpreadsheet\Writer\Pdf\Tcpdf;
+use Throwable;
+use function Illuminate\Support\Str;
 
 class InformesController extends Controller
 {
@@ -353,30 +358,80 @@ class InformesController extends Controller
     }
 
 
-    public function mostrarPlanillaFirmar($id, $evolucion){
-        try{
-            $base64ExcelContent = $this->exportarPlanillaFirmas($id, $evolucion);
-            // Decodificar el contenido del Excel base64 y guardarlo en un archivo temporal
-            $excelData = base64_decode($base64ExcelContent);
-            $tempExcelFile = tempnam(sys_get_temp_dir(), 'excel');
-            file_put_contents($tempExcelFile, $excelData);
 
-            // Generar el PDF a partir del archivo Excel utilizando Dompdf
-            $pdf = PDF::loadFile($tempExcelFile);
+    public function mostrarPlanillaFirmar($id, $evolucion, $descarga)
+    {
+        try {
+            $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
+            $ped = DB::select('select * from ped_nino where cod_usuario_panda = ? and cod_evolucion_ped=?
+                         and estado_registro_ped=1 order by fecha_registro_ped ASC ', [$id, $evolucion]);
+            $eps = DB::select('select nom_administrador_plan_beneficios from eps_paciente where cod_usuario_panda =?', [$id]);
+            $filename = 'Planilla Firmas-' . $ninoPanda[0]->nombres . '.xlsx';
 
-            // Obtener el contenido del PDF en base64
-            $pdfBase64 = base64_encode($pdf->output());
+            if( !$ninoPanda || !$ped) {
+                return response()->json([
+                    'message' => "Ha ocurrido un error. Verifique que el usuario tenga sesiones registradas.",
+                    'success' => false], 200);
+            }
 
-            // Eliminar el archivo temporal del Excel
-            File::delete($tempExcelFile);
 
+            header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        }catch(Throwable $e){
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/Formato_firmas.xlsx');
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->setTitle("PED -" . $ninoPanda[0]->nombres);
+            $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
+
+            $worksheet->getCell("D5")->setValue($ped[0]->nom_mes);
+            $worksheet->getCell("G5")->setValue($ped[0]->anio_evolucion);
+
+            $worksheet->getCell("G6")->setValue($ninoPanda[0]->value_tipo_documento_identificacion . ' ' . $ninoPanda[0]->panda_documento_id);
+            $worksheet->getCell("C7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
+            $worksheet->getCell("F7")->setValue($eps[0]->nom_administrador_plan_beneficios);
+
+            $i = 11;
+            foreach ($ped as $fila) {
+                if ($fila) {
+                    if($fila->cod_area_general == 1 or $fila->cod_area_general == 3 or $fila->cod_area_general == 6 or
+                        $fila->cod_area_general == 7 or $fila->cod_area_general == 8 ){
+                        $worksheet->getCell("B$i")->setValue("Fonoaudiologia");
+                        $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                    }else{
+                        $worksheet->getCell("B$i")->setValue($fila->nom_area);
+                        $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
+                    }
+                    $i++;
+                }
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('reportTemplates/'.$filename);
+            $dataFile = public_path(('reportTemplates/'.$filename), $filename);
+            $file = file_get_contents($dataFile);
+            $data = base64_encode($file);
+            /**
+             * Indica si se quiere descargar o solo mostrar el pdf
+             * 1 = descarga
+             */
+            if($descarga==1){
+                $excel = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/'.$filename);
+                $pdf = new Tcpdf($excel);
+                $filename = Str::replace('xlsx', 'pdf', $filename);
+                $pdf->save($filename);
+                $dataFilePdf = public_path(($filename), $filename);
+                $file = file_get_contents($dataFilePdf);
+                $data = base64_encode($file);
+                unlink($dataFilePdf);
+            }
+
+            unlink($dataFile);
+        }catch (Throwable $e) {
             return response()->json([
                 'message' => "Ha ocurrido un error. " . $e->getMessage(),
-                'success' => false], 400);
+                'success' => false], 200);
         }
-
         return response()->json([
             'message' => '¡Descarga exitosamente!',
             'data' => [
@@ -386,6 +441,7 @@ class InformesController extends Controller
             'success' => true
         ], 200);
     }
+
 
     public function exportarEntrevista($id)
     {

@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "barryvdh/laravel-dompdf": "^2.0",
         "calcinai/php-imagick": "^0.1.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.4",
@@ -15,6 +16,8 @@
         "laravel/tinker": "^2.5",
         "phpoffice/phpspreadsheet": "dev-NumberFormatMask-Helpers",
         "phpoffice/phpword": "^0.18.2",
+        "spatie/simple-excel": "^3.2",
+        "tecnickcom/tcpdf": "^6.6",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {

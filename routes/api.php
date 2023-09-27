@@ -452,6 +452,8 @@ Route::prefix('informes')->group(
         Route::get('/ped/{id}/{evolucion}/{area}',[InformesController::class, 'exportarPed']);
         Route::get('/pf/{id}/{evolucion}/',[InformesController::class, 'exportarPlanillaFirmas']);
         Route::get('/entrevista/{id}',[InformesController::class, 'exportarEntrevista']);
+        Route::get('/showpf/{id}/{evolucion}/{descarga}',[InformesController::class, 'mostrarPlanillaFirmar']);
+
 
     });
 
