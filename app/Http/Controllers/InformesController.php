@@ -289,77 +289,8 @@ class InformesController extends Controller
         ], 200);
     }
 
-    public function exportarPlanillaFirmas($id, $evolucion)
-    {
-        try {
-        $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);
-        $ped = DB::select('select * from ped_nino where cod_usuario_panda = ? and cod_evolucion_ped=?
-                         and estado_registro_ped=1 order by fecha_registro_ped ASC ', [$id, $evolucion]);
-        $eps = DB::select('select nom_administrador_plan_beneficios from eps_paciente where cod_usuario_panda =?', [$id]);
-        $filename = 'Planilla Firmas-' . $ninoPanda[0]->nombres . '.xlsx';
 
-        if( !$ninoPanda || !$ped) {
-            return response()->json([
-                'message' => "Ha ocurrido un error. Verifique que el usuario tenga sesiones registradas.",
-                'success' => false], 200);
-        }
-
-
-        header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-
-        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/Formato_firmas.xlsx');
-        $worksheet = $spreadsheet->getActiveSheet();
-
-        $worksheet->setTitle("PED -" . $ninoPanda[0]->nombres);
-        $worksheet->getCell("C6")->setValue($ninoPanda[0]->nombres . ' ' . $ninoPanda[0]->apellidos);
-
-        $worksheet->getCell("D5")->setValue($ped[0]->nom_mes);
-        $worksheet->getCell("G5")->setValue($ped[0]->anio_evolucion);
-
-        $worksheet->getCell("G6")->setValue($ninoPanda[0]->value_tipo_documento_identificacion . ' ' . $ninoPanda[0]->panda_documento_id);
-        $worksheet->getCell("C7")->setValue($ninoPanda[0]->panda_fecha_nacimiento);
-        $worksheet->getCell("F7")->setValue($eps[0]->nom_administrador_plan_beneficios);
-
-        $i = 11;
-        foreach ($ped as $fila) {
-            if ($fila) {
-                if($fila->cod_area_general == 1 or $fila->cod_area_general == 3 or $fila->cod_area_general == 6 or
-                    $fila->cod_area_general == 7 or $fila->cod_area_general == 8 ){
-                    $worksheet->getCell("B$i")->setValue("Fonoaudiologia");
-                    $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
-                }else{
-                    $worksheet->getCell("B$i")->setValue($fila->nom_area);
-                    $worksheet->getCell("C$i")->setValue($fila->fecha_registro_ped);
-                }
-                $i++;
-            }
-        }
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save($filename);
-        $dataFile = public_path(($filename), $filename);
-        $file = file_get_contents($dataFile);
-        $data = base64_encode($file);
-        unlink($dataFile);
-        }catch (Throwable $e) {
-            return response()->json([
-                'message' => "Ha ocurrido un error. " . $e->getMessage(),
-                'success' => false], 200);
-        }
-        return response()->json([
-            'message' => '¡Descarga exitosamente!',
-            'data' => [
-                'name' => $filename,
-                'data' => $data
-            ],
-            'success' => true
-        ], 200);
-    }
-
-
-
-    public function mostrarPlanillaFirmar($id, $evolucion, $descarga)
+    public function exportarPlanillaFirmas($id, $evolucion, $descarga)
     {
         try {
             $ninoPanda = DB::select('select * from usuario_panda_info where cod_usuario_panda =?', [$id]);

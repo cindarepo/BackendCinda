@@ -450,9 +450,9 @@ Route::prefix('informes')->group(
     function (){
         Route::get('/acta/{id}/{evolucion}',[InformesController::class, 'exportarActa']);
         Route::get('/ped/{id}/{evolucion}/{area}',[InformesController::class, 'exportarPed']);
-        Route::get('/pf/{id}/{evolucion}/',[InformesController::class, 'exportarPlanillaFirmas']);
+        //Route::get('/pf/{id}/{evolucion}/',[InformesController::class, 'exportarPlanillaFirmas']);
         Route::get('/entrevista/{id}',[InformesController::class, 'exportarEntrevista']);
-        Route::get('/showpf/{id}/{evolucion}/{descarga}',[InformesController::class, 'mostrarPlanillaFirmar']);
+        Route::get('/pf/{id}/{evolucion}/{descarga}',[InformesController::class, 'exportarPlanillaFirmas']);
 
 
     });
