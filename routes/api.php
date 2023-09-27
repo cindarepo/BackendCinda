@@ -286,10 +286,6 @@ Route::prefix('objetivo_ped')->group(
     }
 );
 
-
-
-
-
 /**
  *FIN TABLAS TIPO
  */
@@ -306,6 +302,11 @@ Route::prefix('informacion_personal_panda')->group(
 Route::prefix('usuario_panda')->group(
     function (){
         Route::get('/{id}',[UsuarioPandaController::class, 'getInfo']);
+        /**
+         * Se crea nuevo endpoint para cargar tabla incial con los datos necesarios
+         */
+        Route::get('/v2/{id}',[UsuarioPandaController::class, 'getDatosUsuario']);
+
         Route::get('/u/{id}',[UsuarioPandaController::class, 'getInfoUsuarioxcod']);
 
         // Orden medica
@@ -401,6 +402,9 @@ Route::prefix('evolucion_ped')->group(
         Route::get('/u/{id}',[EvoluvionPedController::class, 'serviceGetInfoxcodusuario']);
         Route::get('/e/{idEvolucion}',[EvoluvionPedController::class, 'serviceGetInfoxevolucion']);
         Route::post('/new',[ControladorGeneral::class, 'storeEvolucionPED']);
+        /**
+         * Endpoint para editar el número de sesiones de un usuario
+         */
         Route::post('/edit',[ControladorGeneral::class, 'editarEvolucionPED']);
 
     });
@@ -415,7 +419,10 @@ Route::prefix('registro_ped')->group(
 
         // Guarda acumuladas y no acumuladas
         Route::post('/new',[ControladorGeneral::class, 'storeRegistroPed']);
-
+        /**
+         * Se crea endpoint para editar ped
+         */
+        Route::post('/edit/ped',[ControladorGeneral::class, 'editRegistroPed']);
         // Carga una acumulada en la evolución
         Route::post('/newA',[ControladorGeneral::class, 'storeRegistroPedAcumulado']);
 
@@ -423,16 +430,12 @@ Route::prefix('registro_ped')->group(
         Route::get('/inicio',[DescripcionInicioPedController::class, 'getInfo']);
         Route::get('/final',[DescripcionFinalPedController::class, 'getInfo']);
 
-
         Route::get('/act/{id}',[ActividadPedController::class, 'getActividadXobjetivoGeneral']);
-
         Route::get('/OT/{id}',[ObjetivoTipoPedController::class, 'getObjetivoTipo_area']);
         Route::get('/horarios',[ObjetivoTipoPedController::class, 'getHorarios']);
         Route::get('/recomendacion',[RecomendacionPedController::class, 'getRecomendacionXarea']);
         Route::get('/resultado',[ObjetivoTipoPedController::class, 'getResultadoXarea']);
-
         Route::get('/OG/{id}',[ObjetivosGeneralesPedController::class, 'getObjetivoPed_objetivo_tipo']);
-
         Route::get('/OP/{id}',[ObjetivoPedController::class, 'getObjetivoPed_objetivoGeneral']);
 
     });
@@ -452,6 +455,10 @@ Route::prefix('informes')->group(
         Route::get('/ped/{id}/{evolucion}/{area}',[InformesController::class, 'exportarPed']);
         //Route::get('/pf/{id}/{evolucion}/',[InformesController::class, 'exportarPlanillaFirmas']);
         Route::get('/entrevista/{id}',[InformesController::class, 'exportarEntrevista']);
+        /**
+         * Descarga = 1 -> mostrar pdf
+         *  2 -> decarga
+         */
         Route::get('/pf/{id}/{evolucion}/{descarga}',[InformesController::class, 'exportarPlanillaFirmas']);
 
 

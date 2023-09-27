@@ -721,12 +721,29 @@ class ControladorGeneral extends Controller
 
             return response()->json([
                 'message' => $e->getMessage(),
-                'success' => false], 200);
+                'success' => false], 400);
         }
         return response()->json([
             'message' => '¡Se registro exitosamente!',
             'success' => true
         ], 200);
+    }
+
+    public function editRegistroPed(Request $request){
+        try {
+            $datosGenerales = $request->json()->all();
+            $codRegistroPed = $datosGenerales['cod_registro_ped'];
+            $this->registroPedController->updateLocal($datosGenerales, $codRegistroPed);
+        }catch (Throwable $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+                'success' => false], 400);
+        }
+        return response()->json([
+            'message' => '¡Se actualizo exitosamente!',
+            'success' => true
+        ], 200);
+
     }
 
     public function storeValoraciones(Request $request)

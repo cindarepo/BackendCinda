@@ -43,6 +43,30 @@ class UsuarioPandaController extends Controller
         return response()->json($data, 200);
     }
 
+
+    /**
+     * Metodo encargado de cargar la pantalla inicial
+     */
+    public function getDatosUsuario($tipo){
+        /**
+         * Tipo 1 activos. tipo 2 inactivos
+         */
+        if($tipo == 1) {
+            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario')
+                ->orwhere('panda_cod_status_usuario', '=', 1)
+                ->orWhere('panda_cod_status_usuario', '=', 2)
+                ->orWhere('panda_cod_status_usuario', '=', 3)
+                ->orWhere('panda_cod_status_usuario', '=', 4)->get();
+        }else{
+            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario')
+                ->orwhere('panda_cod_status_usuario', '=', 5)
+                ->orWhere('panda_cod_status_usuario', '=', 6)
+                ->orWhere('panda_cod_status_usuario', '=', 7)
+                ->orWhere('panda_cod_status_usuario', '=', 8)->get();
+        }
+        return response()->json($data, 200);
+    }
+
     public function getEntrevista($id)
     {
         $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico',

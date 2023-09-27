@@ -344,7 +344,8 @@ class InformesController extends Controller
             $data = base64_encode($file);
             /**
              * Indica si se quiere descargar o solo mostrar el pdf
-             * 1 = descarga
+             * 1 = mostrar pdf
+             * 2 = decarga
              */
             if($descarga==1){
                 $excel = \PhpOffice\PhpSpreadsheet\IOFactory::load('reportTemplates/'.$filename);
