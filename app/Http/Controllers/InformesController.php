@@ -17,6 +17,8 @@ use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\SimpleType\TblWidth;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\TemplateProcessor;
+use PDF;
+use Illuminate\Support\Facades\File;
 
 class InformesController extends Controller
 {
@@ -340,6 +342,41 @@ class InformesController extends Controller
                 'message' => "Ha ocurrido un error. " . $e->getMessage(),
                 'success' => false], 200);
         }
+        return response()->json([
+            'message' => '¡Descarga exitosamente!',
+            'data' => [
+                'name' => $filename,
+                'data' => $data
+            ],
+            'success' => true
+        ], 200);
+    }
+
+
+    public function mostrarPlanillaFirmar($id, $evolucion){
+        try{
+            $base64ExcelContent = $this->exportarPlanillaFirmas($id, $evolucion);
+            // Decodificar el contenido del Excel base64 y guardarlo en un archivo temporal
+            $excelData = base64_decode($base64ExcelContent);
+            $tempExcelFile = tempnam(sys_get_temp_dir(), 'excel');
+            file_put_contents($tempExcelFile, $excelData);
+
+            // Generar el PDF a partir del archivo Excel utilizando Dompdf
+            $pdf = PDF::loadFile($tempExcelFile);
+
+            // Obtener el contenido del PDF en base64
+            $pdfBase64 = base64_encode($pdf->output());
+
+            // Eliminar el archivo temporal del Excel
+            File::delete($tempExcelFile);
+
+
+        }catch(Throwable $e){
+            return response()->json([
+                'message' => "Ha ocurrido un error. " . $e->getMessage(),
+                'success' => false], 400);
+        }
+
         return response()->json([
             'message' => '¡Descarga exitosamente!',
             'data' => [
