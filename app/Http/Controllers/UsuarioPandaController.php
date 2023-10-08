@@ -52,13 +52,13 @@ class UsuarioPandaController extends Controller
          * Tipo 1 activos. tipo 2 inactivos
          */
         if($tipo == 1) {
-            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario')
+            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario', 'panda_plan_beneficios.cod_administrador_plan_beneficios')
                 ->orwhere('panda_cod_status_usuario', '=', 1)
                 ->orWhere('panda_cod_status_usuario', '=', 2)
                 ->orWhere('panda_cod_status_usuario', '=', 3)
                 ->orWhere('panda_cod_status_usuario', '=', 4)->get();
         }else{
-            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario')
+            $data = UsuarioPanda::with('panda_informacion_personal.panda_sexo_biologico', 'panda_cod_status_usuario', 'panda_plan_beneficios.cod_administrador_plan_beneficios')
                 ->orwhere('panda_cod_status_usuario', '=', 5)
                 ->orWhere('panda_cod_status_usuario', '=', 6)
                 ->orWhere('panda_cod_status_usuario', '=', 7)

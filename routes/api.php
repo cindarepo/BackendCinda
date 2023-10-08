@@ -414,6 +414,8 @@ Route::prefix('registro_ped')->group(
         Route::get('/ped/{cod_ped}',[RegistroPedController::class, 'getSesionPed']);
         Route::get('/e/{evolucion}/{estado}',[RegistroPedController::class, 'getInfoxcodEvolucion']);
         Route::get('/a/{cod_usuario}/{area}',[RegistroPedController::class, 'getPedAcumuladosxCodUsuarioxArea']);
+        Route::get('/ped/{evolucion}/{estado}',[RegistroPedController::class, 'getRegistrosFaltantes']);
+
 
         Route::get('/acumulada/{id}',[ControladorGeneral::class, 'pasarAcumulada']);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\PED;
 
+use App\Models\EntidadesTipo\Area;
 use App\Models\EntidadesTipo\EstadoRegistro;
 use App\Models\UsuarioPanda;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,6 +42,12 @@ class RegistroPed extends Model
         return $this->hasMany(HorarioSesionPed::class,
             'cod_horario_sesion',
             'cod_horario_sesion');
+    }
+
+    public function cod_area_general(){
+        return $this->hasOne(Area::class,
+            'cod_area',
+            'cod_area_general');
     }
 
 /**
