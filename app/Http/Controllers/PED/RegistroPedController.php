@@ -33,17 +33,15 @@ class RegistroPedController extends Controller
     }
 
     public function getRegistrosFaltantes($idEvolucion, $estadoPed){
+
         $data = DB::select('
-                 select evolucion_mensual_ped.numero_sesiones, cod_area_general, count(cod_area_general) as Sesiones from registro_ped,
+          select evolucion_mensual_ped.numero_sesiones, cod_area_general, count(cod_area_general) as Sesiones from registro_ped,
           evolucion_mensual_ped
-          where cod_evolucion_ped = ?  and estado_registro_ped = 1 and evolucion_mensual_ped.cod_evolucion_mensual_ped = registro_ped.cod_evolucion_ped
+          where cod_evolucion_ped = ?  
+          and estado_registro_ped = ? and 
+          evolucion_mensual_ped.cod_evolucion_mensual_ped = registro_ped.cod_evolucion_ped
           group by cod_area_general
-        ',
-                                  [$idEvolucion, 1] );
-        $dataEvolucion = DB::select('select * from evolucion_mensual_ped, 
-                                  where cod_evolucion_mensual_ped = ?',
-                                 [$idEvolucion] );
-        print_r($dataEvolucion);
+        ', [$idEvolucion, $estadoPed] );
 
         // $dataPed = $this->getSesionPed($ped);
         return response()->json($data, 201);
