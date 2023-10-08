@@ -35,7 +35,7 @@ class RegistroPedController extends Controller
     public function getRegistrosFaltantes($idEvolucion, $estadoPed){
 
         $data = DB::select('
-          select evolucion_mensual_ped.numero_sesiones, cod_area_general, count(cod_area_general) as Sesiones from registro_ped,
+          select  cod_area_general, count(cod_area_general) as Sesiones from registro_ped,
           evolucion_mensual_ped
           where cod_evolucion_ped = ?  
           and estado_registro_ped = ? and 
