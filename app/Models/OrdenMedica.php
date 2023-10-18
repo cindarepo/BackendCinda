@@ -16,7 +16,8 @@ class OrdenMedica extends Model
         "vencimiento_orden_medica",
         "vigencia_orden_medica_dias",
         "estado_orden_medica",
-        "cod_usuario_panda"
+        "cod_usuario_panda",
+        "cantidad_sesiones"
     ];
 
 }
