@@ -141,9 +141,9 @@ class InformesController extends Controller
             }
 
             if($fono){
-                $filename = 'PED-Fonoaudiologia -' . $ninoPanda[0]->nombres. '.xlsx';
+                $filename = 'PED-Fonoaudiologia -' . trim($ninoPanda[0]->nombres).'.xlsx';
             }elseif ($f){
-                $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres. '.xlsx';
+                $filename = 'PED-GENERAL' . $ninoPanda[0]->nombres.'.xlsx';
             }else{
                 $filename = 'PED -'. $ped[0]->nom_area. ' - '. $ninoPanda[0]->nombres. '.xlsx';
             }
@@ -191,7 +191,6 @@ class InformesController extends Controller
 
 
             $i = 12;
-
             foreach ($ped as $fila) {
                 if ($fila) {
                     $worksheet->getCell("B$i")->setValue($fila->detalle_horario);
@@ -222,12 +221,14 @@ class InformesController extends Controller
                 }
             }
 
+
+
            for ($x = $i; $x <= 252; $x++){
                $spreadsheet->getActiveSheet()->getRowDimension($x)->setVisible(false);
            }
 
 
-            $drawing = new Drawing();
+           $drawing = new Drawing();
             if($f){
                 $worksheet->getCell("G261")->setValue("PED general");
             }else{
@@ -236,33 +237,28 @@ class InformesController extends Controller
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fonoaudiologa);
                 }elseif ($teo){
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_teo);
-                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
-                        [$asignacion_profesionales[0]->cod_teo]);
+                    //$firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                      //  [$asignacion_profesionales[0]->cod_teo]);
                 }elseif ($fisio){
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_fisioterapia);
-                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
-                        [$asignacion_profesionales[0]->cod_fisioterapia]);
+                    //$firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                      //  [$asignacion_profesionales[0]->cod_fisioterapia]);
                 }elseif ($psico){
                     $worksheet->getCell("G261")->setValue($asignacion_profesionales[0]->nom_psicologia);
-                    $firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
-                        [$asignacion_profesionales[0]->cod_psicologa]);
+                     //$firma = DB::select('select * from  profesionales_firmas where cod_profesional =?',
+                       // [$asignacion_profesionales[0]->cod_psicologa]);
                 }else{
                     $worksheet->getCell("G261")->setValue("Sin asignación");
                 }
 
-
-                if($firma){
-                    file_put_contents('reportTemplates/'.$firma[0]->cod_profesional.'.png', $firma[0]->firma_profesional);
-                    $drawing->setPath('reportTemplates/'.$firma[0]->cod_profesional.'.png');
-                }else{
-                    $drawing->setPath('reportTemplates/firma.png');
-                }
-
+                $drawing->setPath('reportTemplates/firma.png');
                 $drawing->setHeight(90);
                 $drawing->setCoordinates('E255');
                 $drawing->setOffsetX(100);
                 $drawing->setWorksheet($spreadsheet->getActiveSheet());
+
             }
+
 
             $writer = new Xlsx($spreadsheet);
             $writer->save($filename);
@@ -270,7 +266,6 @@ class InformesController extends Controller
             $file = file_get_contents($dataFile);
             $data = base64_encode($file);
             unlink($dataFile);
-            //unlink('reportTemplates/'.$firma[0]->cod_profesional.'.png');
 
         }catch (Throwable $e) {
             return response()->json([
@@ -288,7 +283,6 @@ class InformesController extends Controller
             'success' => true
         ], 200);
     }
-
 
     public function exportarPlanillaFirmas($id, $evolucion, $descarga)
     {
