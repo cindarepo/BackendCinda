@@ -62,6 +62,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['middleware' => ['cors']], function () {
+
 Route::get('list/CD',[TablasTipoContenedorController::class, 'index']);
 Route::get('list/getTablasTipo',[TablasTipoContenedorController::class, 'getTablasTipo']);
 Route::get('list/getTablaTipoByNom/{nom}',[TablasTipoContenedorController::class, 'getByNom']);
@@ -478,6 +480,9 @@ Route::prefix('diagnostico')->group(
         Route::post('/update',[ControladorGeneral::class, 'updateDiagnosticos']);
         Route::get('/{idusuario}',[UsuarioPandaController::class, 'getDiagnostico']);
     });
+
+
+});
 
 /*Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('user','App\Http\Controllers\UserController@getAuthenticatedUser');
